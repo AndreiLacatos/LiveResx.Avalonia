@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Playground/Playground.csproj" />
+  <Project Path="Translations/Translations.csproj" />
+</Solution>

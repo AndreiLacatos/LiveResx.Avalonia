@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:Playground"
+        xmlns:translations="clr-namespace:Translations;assembly=Translations"
+        xmlns:resx="clr-namespace:LiveResx.Avalonia"
+        xmlns:avalonia="clr-namespace:LiveResx.Avalonia;assembly=LiveResx.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Playground.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Playground">
+        <StackPanel>
+                <Grid ColumnDefinitions="*,*,*" RowDefinitions="*">
+                        <Button Grid.Column="0" Command="{Binding SetEnglish}">EN</Button>
+                        <Button Grid.Column="1" Command="{Binding SetGerman}">DE</Button>
+                        <Button Grid.Column="2" Command="{Binding SetFrench}">FR</Button>
+                </Grid>
+                <Border Padding="20">
+                        <StackPanel>
+                                <TextBlock Text="{x:Static translations:Resources.HelloWorld}"/>
+                                <TextBlock Text="{resx:Translate {x:Static resx:DynamicResources.HelloWorld}}" FontSize="32" />
+                        </StackPanel>
+                </Border>
+        </StackPanel>
+</Window>

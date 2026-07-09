@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="..\tests\LiveResx.Avalonia.SourceGenerators.Tests\LiveResx.Avalonia.SourceGenerators.Tests.csproj" />
+  <Project Path="LiveResx.Avalonia.SourceGenerators\LiveResx.Avalonia.SourceGenerators.csproj" />
+  <Project Path="LiveResx.Avalonia/LiveResx.Avalonia.csproj" />
+</Solution>
