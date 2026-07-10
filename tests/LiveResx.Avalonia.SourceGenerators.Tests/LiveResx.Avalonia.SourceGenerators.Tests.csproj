@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <RootNamespace>ListResxAvalonia.SourceGenerators.Tests</RootNamespace>
+    <RootNamespace>LiveResxAvalonia.SourceGenerators.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
