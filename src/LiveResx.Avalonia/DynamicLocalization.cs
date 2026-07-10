@@ -14,13 +14,13 @@ namespace LiveResx.Avalonia
     public sealed class DynamicLocalization
     {
         private static readonly CultureInfo StartingCulture = CultureInfo.CurrentUICulture;
-        private static DynamicLocalization _instance;
+        private static readonly Lazy<DynamicLocalization> _lazy = new Lazy<DynamicLocalization>(() => new DynamicLocalization());
 
         /// <summary>
         /// Gets the singleton <see cref="DynamicLocalization"/> instance that coordinates
         /// all dynamic translations during the application's lifetime.
         /// </summary>
-        public static DynamicLocalization Instance => _instance ?? (_instance = new DynamicLocalization());
+        public static DynamicLocalization Instance => _lazy.Value;
 
         private DynamicLocalization()
         {

@@ -35,9 +35,9 @@ internal static class DynamicResourcesGenerator
         {
             foreach (var key in type.ResourceKeys)
             {
-                sb.AppendLine($"        public static DynamicTranslation {key} {{ get; }} = new DynamicTranslation(");
+                sb.AppendLine($"        public static global::LiveResx.Avalonia.DynamicTranslation {key} {{ get; }} = new global::LiveResx.Avalonia.DynamicTranslation(");
                 sb.AppendLine($"            \"{key}\",");
-                sb.AppendLine($"            () => {type.FullTypeName}.ResourceManager);");
+                sb.AppendLine($"            () => global::{type.FullTypeName}.ResourceManager);");
             }
         }
 

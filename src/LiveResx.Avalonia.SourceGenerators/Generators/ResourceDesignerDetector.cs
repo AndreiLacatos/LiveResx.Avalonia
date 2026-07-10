@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using LiveResx.Avalonia.SourceGenerators.Models;
@@ -28,10 +27,11 @@ internal static class ResourceDesignerDetector
 
         foreach (var type in WalkAllTypes(compilation.GlobalNamespace, ct))
         {
-            if (!IsResourceDesignerType(type))
+            var members = type.GetMembers();
+            if (!IsResourceDesignerType(members))
                 continue;
 
-            var keys = GetResourceKeys(type);
+            var keys = GetResourceKeys(members);
             if (keys.Count == 0)
                 continue;
 
@@ -105,12 +105,12 @@ internal static class ResourceDesignerDetector
     /// The fingerprint is deliberately conservative: both properties must be
     /// present for a match. Types with only one of the two are rejected.
     /// </summary>
-    private static bool IsResourceDesignerType(INamedTypeSymbol type)
+    private static bool IsResourceDesignerType(IReadOnlyList<ISymbol> members)
     {
         var hasResourceManager = false;
         var hasCulture = false;
 
-        foreach (var member in type.GetMembers())
+        foreach (var member in members)
         {
             if (member is not IPropertySymbol prop || !prop.IsStatic)
                 continue;
@@ -153,11 +153,11 @@ internal static class ResourceDesignerDetector
     /// would require <see cref="SemanticModel"/> for source types and is
     /// impossible for metadata references.
     /// </summary>
-    private static IReadOnlyList<string> GetResourceKeys(INamedTypeSymbol type)
+    private static IReadOnlyList<string> GetResourceKeys(IReadOnlyList<ISymbol> members)
     {
         var keys = new List<string>();
 
-        foreach (var member in type.GetMembers())
+        foreach (var member in members)
         {
             if (member is not IPropertySymbol prop)
                 continue;

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Resources;
@@ -16,21 +15,23 @@ namespace LiveResx.Avalonia
     public sealed class DynamicTranslation : INotifyPropertyChanged
     {
         private readonly string _resourceKey;
-        private readonly ResourceManager _resourceManager;
+        private readonly Lazy<ResourceManager> _resourceManager;
         private CultureInfo _culture;
 
         /// <summary>
         /// Creates a translation that resolves the specified <paramref name="resourceKey"/>
         /// at runtime using the provided <paramref name="resourceManagerFactory"/>.
-        /// The factory pattern avoids tight coupling to a specific <see cref="ResourceManager"/>
-        /// instance. The resource key must not be <c>null</c> or whitespace.
+        /// The factory is called lazily on first access to <see cref="Text"/>,
+        /// avoiding eager ResourceManager creation at static initialization time.
+        /// The resource key must not be <c>null</c> or whitespace.
         /// </summary>
         /// <param name="resourceKey">The key of the resource string to look up. Must not be
         /// <c>null</c> or consist only of whitespace.</param>
         /// <param name="resourceManagerFactory">A factory function that returns the
-        /// <see cref="ResourceManager"/> for the target resource file.</param>
+        /// <see cref="ResourceManager"/> for the target resource file. Must not be <c>null</c>.</param>
         /// <exception cref="ArgumentException"><paramref name="resourceKey"/> is <c>null</c>
         /// or consists only of whitespace.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="resourceManagerFactory"/> is <c>null</c>.</exception>
         public DynamicTranslation(
             string resourceKey,
             Func<ResourceManager> resourceManagerFactory)
@@ -41,13 +42,17 @@ namespace LiveResx.Avalonia
             }
 
             _resourceKey = resourceKey;
-            _resourceManager = resourceManagerFactory();
+            _resourceManager = new Lazy<ResourceManager>(
+                resourceManagerFactory ?? throw new ArgumentNullException(nameof(resourceManagerFactory)));
         }
 
         /// <summary>
         /// Gets the localized string for the current culture by looking up the resource key
         /// via the <see cref="ResourceManager"/>. This is the property you data-bind to in XAML;
         /// it automatically raises <see cref="PropertyChanged"/> when the culture switches.
+        /// <para />
+        /// The <see cref="ResourceManager"/> is obtained from the factory on the first access
+        /// and cached for the lifetime of this translation.
         /// </summary>
         /// <returns>The localized string, or <see cref="string.Empty"/> if the resource key
         /// is not found.</returns>
@@ -59,7 +64,8 @@ namespace LiveResx.Avalonia
         {
             get
             {
-                if (_resourceManager is null)
+                var rm = _resourceManager.Value;
+                if (rm is null)
                 {
                     throw new InvalidOperationException("Resource manager is not initialized");
                 }
@@ -68,7 +74,7 @@ namespace LiveResx.Avalonia
                     throw new InvalidOperationException("Culture not set");
                 }
 
-                return _resourceManager.GetString(_resourceKey, _culture) ?? string.Empty;
+                return rm.GetString(_resourceKey, _culture) ?? string.Empty;
             }
         }
 
@@ -89,12 +95,5 @@ namespace LiveResx.Avalonia
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-            field = value;
-            OnPropertyChanged(propertyName);
-            return true;
-        }
     }
 }

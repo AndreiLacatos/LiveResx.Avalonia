@@ -6,11 +6,11 @@
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <Nullable>enable</Nullable>
-        <EnforceExtendedAnalyzerRules>false</EnforceExtendedAnalyzerRules>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
         <ImplicitUsings>false</ImplicitUsings>
         <LangVersion>Latest</LangVersion>
         <IsRoslynComponent>true</IsRoslynComponent>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
