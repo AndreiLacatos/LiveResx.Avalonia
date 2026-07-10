@@ -5,7 +5,6 @@
         xmlns:vm="clr-namespace:Playground"
         xmlns:translations="clr-namespace:Translations;assembly=Translations"
         xmlns:resx="clr-namespace:LiveResx.Avalonia"
-        xmlns:avalonia="clr-namespace:LiveResx.Avalonia;assembly=LiveResx.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Playground.MainWindow"
         x:DataType="vm:MainWindowViewModel"
