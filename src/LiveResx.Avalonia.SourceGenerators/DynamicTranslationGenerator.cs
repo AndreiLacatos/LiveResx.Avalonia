@@ -1,5 +1,7 @@
 using System;
+using System.Threading;
 using LiveResx.Avalonia.SourceGenerators.Generators;
+using LiveResx.Avalonia.SourceGenerators.Models;
 using Microsoft.CodeAnalysis;
 
 namespace LiveResx.Avalonia.SourceGenerators;
@@ -16,7 +18,15 @@ public class DynamicTranslationGenerator : IIncrementalGenerator
         var deps = _dependencies ?? GeneratorDependencies.Default;
         var ts = deps.TimestampProvider();
 
-        // TranslateExtension — standalone markup extension, no resource discovery needed.
+        // Phase 2: Detect resource designer types in the compilation.
+        // Consumed by Phase 3 (DynamicResources) and Phase 4 (Registration).
+#pragma warning disable CS0219 // variable is assigned but never used
+        var resourceTypes = context.CompilationProvider
+            .Select(static (compilation, ct) =>
+                ResourceDesignerDetector.Detect(compilation, ct));
+#pragma warning restore CS0219
+
+        // Phase 1: TranslateExtension — standalone markup extension, no resource discovery needed.
         context.RegisterSourceOutput(
             context.CompilationProvider,
             (ctx, _) => TranslateExtensionGenerator.Emit(ctx, ts));
