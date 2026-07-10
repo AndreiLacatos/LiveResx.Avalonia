@@ -20,19 +20,22 @@ public class DynamicTranslationGenerator : IIncrementalGenerator
 
         // Phase 2: Detect resource designer types in the compilation.
         // Consumed by Phase 3 (DynamicResources) and Phase 4 (Registration).
-#pragma warning disable CS0219 // variable is assigned but never used
         var resourceTypes = context.CompilationProvider
-            .Select(static (compilation, ct) =>
-                ResourceDesignerDetector.Detect(compilation, ct));
-#pragma warning restore CS0219
+            .Select((compilation, ct) =>
+                deps.ResourceDesignerDetector(compilation, ct));
+
+        // Phase 3: DynamicResources — one property per discovered resource key.
+        context.RegisterSourceOutput(
+            resourceTypes,
+            (ctx, types) => DynamicResourcesGenerator.Emit(ctx, ts, types));
 
         // Phase 1: TranslateExtension — standalone markup extension, no resource discovery needed.
         context.RegisterSourceOutput(
             context.CompilationProvider,
             (ctx, _) => TranslateExtensionGenerator.Emit(ctx, ts));
 
-        // Legacy POC — will be replaced by proper DynamicResources + __LiveResxRegistration
-        // generators in future phases.
+        // Legacy POC — will be replaced by proper __LiveResxRegistration
+        // generator in future phases.
         context.RegisterSourceOutput(
             context.CompilationProvider,
             (ctx, _) => EmitPocFallback(ctx, ts));
@@ -49,13 +52,6 @@ public class DynamicTranslationGenerator : IIncrementalGenerator
             GeneratorHeader.Generate(timestamp) + """
             namespace LiveResx.Avalonia
             {
-                public static class DynamicResources
-                {
-                    public static DynamicTranslation HelloWorld { get; } = new DynamicTranslation(
-                        "HelloWorld",
-                        () => Translations.Resources.ResourceManager);
-                }
-
                 internal static class __LiveResxRegistration
                 {
                     [System.Runtime.CompilerServices.ModuleInitializer]
