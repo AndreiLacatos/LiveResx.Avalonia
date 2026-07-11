@@ -18,6 +18,77 @@ Typical approaches usually involve one or more of the following:
 
 LiveResx.Avalonia aims to provide a small, strongly-typed alternative that feels natural to Avalonia applications while keeping `.resx` files as the single source of truth.
 
+## 🚀 Getting Started
+
+
+### 📋 Prerequisites
+
+- **Avalonia 11.0** or later
+- **Standard `.resx` resources** with `PublicResXFileCodeGenerator` or `InternalResXFileCodeGenerator`
+
+---
+
+### 📦 Installation
+
+```bash
+dotnet add package LiveResx.Avalonia
+```
+
+Or via the Package Manager Console:
+
+```powershell
+Install-Package LiveResx.Avalonia
+```
+
+---
+
+### 1️⃣ Create a resource file
+
+Add a `.resx` file (e.g., `Resources.resx`) with the entries you want to localize:
+
+| Name | Value |
+|------|-------|
+| `Greeting` | Hello, World! |
+
+Set the **Custom Tool** property to `PublicResXFileCodeGenerator` (or `InternalResXFileCodeGenerator` for internal types).
+
+---
+
+### 2️⃣ Declare the XAML namespace
+
+In your `Window` or `UserControl`, add the markup extension namespace:
+
+```xml
+xmlns:loc="clr-namespace:LiveResx.Avalonia"
+```
+
+---
+
+### 3️⃣ Use translations in XAML
+
+```xml
+<TextBlock Text="{loc:Translate {x:Static loc:DynamicResources.Greeting}}" />
+```
+
+> **💡 Tip:** Every `DynamicResources.*` property is strongly typed and appears in IntelliSense after the source generator runs.
+
+---
+
+### 4️⃣ Switch culture at runtime
+
+```csharp
+using System.Globalization;
+using LiveResx.Avalonia;
+
+// Switch to German
+DynamicLocalization.Instance.SwitchCulture(new CultureInfo("de"));
+
+// Switch back to English
+DynamicLocalization.Instance.SwitchCulture(new CultureInfo("en"));
+```
+
+All controls using `{loc:Translate ...}` update automatically — no configuration, base class, or service registration required.
+
 ## Features
 
 * ✅ Uses standard `.resx` resource files
@@ -28,32 +99,6 @@ LiveResx.Avalonia aims to provide a small, strongly-typed alternative that feels
 * ✅ No localization service injection
 * ✅ No ViewModel properties for localized strings
 * ✅ No `INotifyPropertyChanged` boilerplate in application code
-
-## Example
-
-Create your translations using standard `.resx` files:
-
-```text
-Resources.resx
-
-HelloWorld = Hello, World!
-```
-
-Use them directly from XAML with full IntelliSense and compile-time validation:
-
-```xml
-<TextBlock
-    Text="{loc:Translate {x:Static loc:DynamicResources.HelloWorld}}" />
-```
-
-Switching the application's language is just a single method call:
-
-```csharp
-DynamicLocalization.Instance.SwitchCulture(
-    new CultureInfo("de"));
-```
-
-Every localized control updates immediately—no window recreation, no ViewModel properties, and no manual `PropertyChanged` notifications.
 
 ## How it works
 
