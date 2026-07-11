@@ -4,10 +4,38 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <ImplicitUsings>false</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <Version>0.1.0</Version>
+        <Authors>Andrei Lacatos</Authors>
+        <Description>Runtime-resource switching for Avalonia applications. Provides DynamicTranslation data bindings and a Roslyn source generator that automatically generates bindings from .resx resource files.</Description>
+        <PackageTags>avalonia;resx;translation;localization;source-generator</PackageTags>
+        <PackageProjectUrl>https://github.com/AndreiLacatos/LiveResx.Avalonia</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/AndreiLacatos/LiveResx.Avalonia</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Avalonia" Version="11.3.18" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+        <_Parameter1>LiveResx.Avalonia.Tests</_Parameter1>
+      </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LiveResx.Avalonia.SourceGenerators\LiveResx.Avalonia.SourceGenerators.csproj"
+                        ReferenceOutputAssembly="false"
+                        PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\LiveResx.Avalonia.SourceGenerators\bin\$(Configuration)\netstandard2.0\LiveResx.Avalonia.SourceGenerators.dll"
+            Pack="true"
+            PackagePath="analyzers/dotnet/cs"
+            Visible="false" />
     </ItemGroup>
 
 </Project>
