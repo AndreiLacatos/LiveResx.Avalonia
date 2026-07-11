@@ -1,0 +1,4 @@
+<Solution>
+    <Project Path="ValidationDemo/ValidationDemo.csproj"/>
+    <Project Path="Translations/Translations.csproj"/>
+</Solution>
