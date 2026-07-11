@@ -1,5 +1,8 @@
 # LiveResx.Avalonia
 
+[![CI](https://github.com/AndreiLacatos/LiveResx.Avalonia/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/AndreiLacatos/LiveResx.Avalonia/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A lightweight localization library for Avalonia with **runtime language switching**, **strongly-typed translations**, and **zero ViewModel boilerplate**.
 
 Unlike traditional `.resx` localization approaches, LiveResx.Avalonia keeps using standard `.resx` files while providing automatic UI updates when the application's culture changes.

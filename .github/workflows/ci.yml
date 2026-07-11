@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_NOLOGO: true
+
+jobs:
+  test-standard:
+    name: Standard tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: |
+          dotnet restore tests/LiveResx.Avalonia.Tests/LiveResx.Avalonia.Tests.csproj
+          dotnet restore tests/LiveResx.Avalonia.SourceGenerators.Tests/LiveResx.Avalonia.SourceGenerators.Tests.csproj
+
+      - name: Build
+        run: |
+          dotnet build tests/LiveResx.Avalonia.Tests/LiveResx.Avalonia.Tests.csproj --no-restore -warnaserror
+          dotnet build tests/LiveResx.Avalonia.SourceGenerators.Tests/LiveResx.Avalonia.SourceGenerators.Tests.csproj --no-restore -warnaserror
+
+      - name: Test
+        run: |
+          dotnet test tests/LiveResx.Avalonia.Tests/LiveResx.Avalonia.Tests.csproj --no-build
+          dotnet test tests/LiveResx.Avalonia.SourceGenerators.Tests/LiveResx.Avalonia.SourceGenerators.Tests.csproj --no-build
+
+  test-e2e:
+    name: E2E tests
+    runs-on: ubuntu-latest
+    needs: test-standard
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Pack NuGet
+        run: dotnet pack src/LiveResx.Avalonia/LiveResx.Avalonia.csproj -c Release -o artifacts
+
+      - name: Restore E2E project
+        run: dotnet restore tests/LiveResx.Avalonia.E2ETests/LiveResx.Avalonia.E2ETests.csproj --configfile tests/LiveResx.Avalonia.E2ETests/nuget.e2e.config
+
+      - name: Build E2E project
+        run: dotnet build tests/LiveResx.Avalonia.E2ETests/LiveResx.Avalonia.E2ETests.csproj --no-restore -warnaserror
+
+      - name: Run E2E tests
+        run: dotnet test tests/LiveResx.Avalonia.E2ETests/LiveResx.Avalonia.E2ETests.csproj --no-build
