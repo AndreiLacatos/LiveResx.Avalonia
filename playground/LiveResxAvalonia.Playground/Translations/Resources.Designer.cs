@@ -8,6 +8,8 @@
 //------------------------------------------------------------------------------
 
 namespace Translations {
+    using System;
+    
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -46,6 +48,12 @@ namespace Translations {
         public static string HelloWorld {
             get {
                 return ResourceManager.GetString("HelloWorld", resourceCulture);
+            }
+        }
+        
+        public static string Awesome {
+            get {
+                return ResourceManager.GetString("Awesome", resourceCulture);
             }
         }
     }

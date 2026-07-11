@@ -14,4 +14,7 @@
     <data name="HelloWorld" xml:space="preserve">
         <value>Hallo Welt!</value>
     </data>
+    <data name="Awesome" xml:space="preserve">
+        <value>Das ist großartig!</value>
+    </data>
 </root>
