@@ -13,17 +13,17 @@ public class MainWindowViewModel : ReactiveObject
         SetEnglish = ReactiveCommand.Create(() =>
         {
             Locale = "en";
-            LiveResx.Avalonia.DynamicLocalization.Instance.SwitchCulture(new CultureInfo("en"));
+            LiveResx.Avalonia.DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
         });
         SetGerman = ReactiveCommand.Create(() =>
         {
             Locale = "de";
-            LiveResx.Avalonia.DynamicLocalization.Instance.SwitchCulture(new CultureInfo("de"));
+            LiveResx.Avalonia.DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
         });
         SetFrench = ReactiveCommand.Create(() =>
         {
             Locale = "fr";
-            LiveResx.Avalonia.DynamicLocalization.Instance.SwitchCulture(new CultureInfo("fr"));
+            LiveResx.Avalonia.DynamicLocalization.Instance.SwitchLocale(new CultureInfo("fr"));
         });
     }
 

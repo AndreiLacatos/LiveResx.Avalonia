@@ -26,4 +26,4 @@ dotnet run --project SimpleDemo
 | **Translations** | A class library with `.resx` files (EN, DE, FR) and the generated `Resources.Designer.cs` (`PublicResXFileCodeGenerator`) |
 | **SimpleDemo** | The Avalonia app that references the `LiveResx.Avalonia` NuGet package and the `Translations` project |
 
-Click a button → `DynamicLocalization.Instance.SwitchCulture(culture)` → all `{loc:Translate}` bindings refresh instantly.
+Click a button → `DynamicLocalization.Instance.SwitchLocale(culture)` → all `{loc:Translate}` bindings refresh instantly.

@@ -10,22 +10,17 @@ public class MainWindowViewModel : ReactiveObject
 {
     public MainWindowViewModel()
     {
-        Locale = "en";
-
         SetEnglish = ReactiveCommand.Create(() =>
         {
-            Locale = "en";
-            SwitchCulture("en");
+            SwitchLocale("en");
         });
         SetGerman = ReactiveCommand.Create(() =>
         {
-            Locale = "de";
-            SwitchCulture("de");
+            SwitchLocale("de");
         });
         SetFrench = ReactiveCommand.Create(() =>
         {
-            Locale = "fr";
-            SwitchCulture("fr");
+            SwitchLocale("fr");
         });
 
         // Reactive validation pipeline:
@@ -41,16 +36,13 @@ public class MainWindowViewModel : ReactiveObject
             .ToProperty(this, x => x.ErrorMessage);
     }
 
-    private static void SwitchCulture(string locale)
-        => DynamicLocalization.Instance.SwitchCulture(new CultureInfo(locale));
+    private static void SwitchLocale(string locale)
+        => DynamicLocalization.Instance.SwitchLocale(new CultureInfo(locale));
 
-    public string Locale { get; set => this.RaiseAndSetIfChanged(ref field, value); }
-
-    string? _userName;
     public string? UserName
     {
-        get => _userName;
-        set => this.RaiseAndSetIfChanged(ref _userName, value);
+        get;
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
     private readonly ObservableAsPropertyHelper<string?> _errorMessage;

@@ -1,6 +1,8 @@
 using System.Globalization;
 using System.Reactive;
+using System.Reactive.Linq;
 using ReactiveUI;
+using LiveResx.Avalonia;
 
 namespace Playground;
 
@@ -9,27 +11,22 @@ public class MainWindowViewModel : ReactiveObject
 {
     public MainWindowViewModel()
     {
-        Locale = "en";
-
+        LocaleLabel = DynamicLocalization.Instance.ObservableLocale().Select(c => c.DisplayName);
         SetEnglish = ReactiveCommand.Create(() =>
         {
-            Locale = "en";
-            LiveResx.Avalonia.DynamicLocalization.Instance.SwitchCulture(new CultureInfo("en"));
+            DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
         });
         SetGerman = ReactiveCommand.Create(() =>
         {
-            Locale = "de";
-            LiveResx.Avalonia.DynamicLocalization.Instance.SwitchCulture(new CultureInfo("de"));
+            DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
         });
         SetFrench = ReactiveCommand.Create(() =>
         {
-            Locale = "fr";
-            LiveResx.Avalonia.DynamicLocalization.Instance.SwitchCulture(new CultureInfo("fr"));
+            DynamicLocalization.Instance.SwitchLocale(new CultureInfo("fr"));
         });
     }
 
-    public string Locale { get; set => this.RaiseAndSetIfChanged(ref field, value); }
-
+    public IObservable<string> LocaleLabel { get; }
     public ReactiveCommand<Unit, Unit> SetEnglish { get; }
     public ReactiveCommand<Unit, Unit> SetGerman { get; }
     public ReactiveCommand<Unit, Unit> SetFrench { get; }

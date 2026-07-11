@@ -10,7 +10,7 @@ namespace LiveResx.Avalonia
     /// Represents a data-bindable binding between a <c>.resx</c> resource key and a
     /// <see cref="ResourceManager"/>. Wires into Avalonia's data-binding system via
     /// <see cref="INotifyPropertyChanged"/> so the UI automatically updates when the culture
-    /// changes through <see cref="DynamicLocalization.SwitchCulture"/>.
+    /// changes through <see cref="DynamicLocalization.SwitchLocale"/>.
     /// </summary>
     public sealed class DynamicTranslation : INotifyPropertyChanged
     {
@@ -59,7 +59,7 @@ namespace LiveResx.Avalonia
         /// <exception cref="InvalidOperationException">The <see cref="ResourceManager"/>
         /// has not been initialized.</exception>
         /// <exception cref="InvalidOperationException">The culture has not been set.
-        /// Call <see cref="DynamicLocalization.SwitchCulture"/> to set the active culture.</exception>
+        /// Call <see cref="DynamicLocalization.SwitchLocale"/> to set the active culture.</exception>
         public string Text
         {
             get

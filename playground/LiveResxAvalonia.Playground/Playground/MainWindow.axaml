@@ -90,6 +90,14 @@
                     FontSize="15"
                     FontWeight="SemiBold"
                     Foreground="#0891B2"/>
+                <TextBlock
+                    Text="{Binding LocaleLabel^}"
+                    HorizontalAlignment="Stretch"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
+                    FontSize="15"
+                    FontWeight="SemiBold"
+                    Foreground="#0891B2"/>
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -84,10 +84,10 @@ using System.Globalization;
 using LiveResx.Avalonia;
 
 // Switch to German
-DynamicLocalization.Instance.SwitchCulture(new CultureInfo("de"));
+DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
 
 // Switch back to English
-DynamicLocalization.Instance.SwitchCulture(new CultureInfo("en"));
+DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
 ```
 
 All controls using `{loc:Translate ...}` update automatically — no configuration, base class, or service registration required.

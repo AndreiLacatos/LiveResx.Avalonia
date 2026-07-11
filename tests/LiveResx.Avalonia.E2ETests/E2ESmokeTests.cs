@@ -20,10 +20,10 @@ public class E2ESmokeTests
     {
         var translation = DynamicResources.HelloWorld;
 
-        DynamicLocalization.Instance.SwitchCulture(new CultureInfo("en"));
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
         Assert.Equal("Hello", translation.Text);
 
-        DynamicLocalization.Instance.SwitchCulture(new CultureInfo("de"));
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
         Assert.Equal("Hallo", translation.Text);
     }
 }

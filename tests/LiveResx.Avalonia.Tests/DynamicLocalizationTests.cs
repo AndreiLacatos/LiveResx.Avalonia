@@ -9,7 +9,7 @@ public class DynamicLocalizationTests
 {
     public DynamicLocalizationTests()
     {
-        DynamicLocalization.Instance.SwitchCulture(new CultureInfo("en"));
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
     }
 
     [Fact]
@@ -29,12 +29,12 @@ public class DynamicLocalizationTests
             [translation],
             _ => { });
 
-        // After Register, SwitchCulture(StartingCulture) is called, so Text is available.
+        // After Register, SwitchLocale(StartingCulture) is called, so Text is available.
         Assert.NotNull(translation.Text);
     }
 
     [Fact]
-    public void SwitchCulture_UpdatesTranslation()
+    public void SwitchLocale_UpdatesTranslation()
     {
         var translation = CreateTranslation("Hello");
 
@@ -42,15 +42,15 @@ public class DynamicLocalizationTests
             [translation],
             _ => { });
 
-        DynamicLocalization.Instance.SwitchCulture(new CultureInfo("en"));
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
         Assert.Equal("Hello, World!", translation.Text);
 
-        DynamicLocalization.Instance.SwitchCulture(new CultureInfo("de"));
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
         Assert.Equal("Hallo, Welt!", translation.Text);
     }
 
     [Fact]
-    public void SwitchCulture_InvokesCallback()
+    public void SwitchLocale_InvokesCallback()
     {
         CultureInfo? callbackCulture = null;
 
@@ -59,7 +59,7 @@ public class DynamicLocalizationTests
             culture => { callbackCulture = culture; });
 
         var de = new CultureInfo("de");
-        DynamicLocalization.Instance.SwitchCulture(de);
+        DynamicLocalization.Instance.SwitchLocale(de);
         Assert.Equal(de, callbackCulture);
     }
 
@@ -79,7 +79,7 @@ public class DynamicLocalizationTests
         DynamicLocalization.Instance.Register([t1], _ => { });
         DynamicLocalization.Instance.Register([t2], _ => { });
 
-        DynamicLocalization.Instance.SwitchCulture(new CultureInfo("de"));
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
 
         Assert.Equal("Hallo, Welt!", t1.Text);
         Assert.Equal("Hallo, Welt!", t2.Text);
