@@ -1,0 +1,96 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:SimpleDemo"
+        xmlns:loc="clr-namespace:LiveResx.Avalonia"
+        mc:Ignorable="d"
+        d:DesignWidth="400"
+        d:DesignHeight="400"
+        x:Class="SimpleDemo.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="SimpleDemo"
+        Width="400"
+        Height="400"
+        WindowStartupLocation="CenterScreen"
+        Background="#F8FAFC">
+    <Window.Styles>
+        <Style Selector="Button.langBtn">
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="0,10"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.18"/>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.18"/>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.18"/>
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pointerover ContentPresenter">
+                <Setter Property="Background" Value="#CFFAFE"/>
+                <Setter Property="BorderBrush" Value="#67E8F9"/>
+                <Setter Property="Foreground" Value="#0E7490"/>
+            </Style>
+            <Style Selector="^:pressed ContentPresenter">
+                <Setter Property="Background" Value="#06B6D4"/>
+                <Setter Property="BorderBrush" Value="#0891B2"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Style>
+        </Style>
+    </Window.Styles>
+    <Grid Margin="24">
+        <StackPanel VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    Spacing="36">
+            <Border CornerRadius="14"
+                    Background="#E2E8F0"
+                    Padding="4"
+                    HorizontalAlignment="Stretch"
+                    BoxShadow="0 8 24 #00000018">
+                <Border CornerRadius="10"
+                        Background="#FFFFFF"
+                        Padding="6">
+                    <UniformGrid Columns="3"
+                                 ColumnSpacing="6">
+                        <Button Classes="langBtn"
+                                Content="EN"
+                                Command="{Binding SetEnglish}"/>
+                        <Button Classes="langBtn"
+                                Content="DE"
+                                Command="{Binding SetGerman}"/>
+                        <Button Classes="langBtn"
+                                Content="FR"
+                                Command="{Binding SetFrench}"/>
+                    </UniformGrid>
+                </Border>
+            </Border>
+            <StackPanel HorizontalAlignment="Stretch"
+                        Spacing="8">
+                <TextBlock
+                    Text="{loc:Translate {x:Static loc:DynamicResources.HelloWorld}}"
+                    HorizontalAlignment="Stretch"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
+                    FontSize="34"
+                    FontWeight="Bold"
+                    Foreground="#E94560"/>
+                <TextBlock
+                    Text="{loc:Translate {x:Static loc:DynamicResources.Awesome}}"
+                    HorizontalAlignment="Stretch"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
+                    FontSize="15"
+                    FontWeight="SemiBold"
+                    Foreground="#0891B2"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
