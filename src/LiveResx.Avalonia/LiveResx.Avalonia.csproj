@@ -12,6 +12,7 @@
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/AndreiLacatos/LiveResx.Avalonia</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
 
@@ -32,6 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Include="$(SolutionDir)\..\README.md" Pack="true" PackagePath="\" />
       <None Include="..\LiveResx.Avalonia.SourceGenerators\bin\$(Configuration)\netstandard2.0\LiveResx.Avalonia.SourceGenerators.dll"
             Pack="true"
             PackagePath="analyzers/dotnet/cs"
