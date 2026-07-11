@@ -56,7 +56,8 @@ internal static class SourceGenerationRunner
         var generator = new DynamicTranslationGenerator();
         generator.ConfigureDependencies(new GeneratorDependencies(
             timestampProvider: () => FixedTimestamp,
-            resourceDesignerDetector: detectorOverride ?? ResourceDesignerDetector.Detect));
+            resourceDesignerDetector: detectorOverride ?? ResourceDesignerDetector.Detect,
+            reactiveAssemblyDetector: (_, _) => false));
 
         var driver = CSharpGeneratorDriver.Create(generator)
             .RunGenerators(compilation);

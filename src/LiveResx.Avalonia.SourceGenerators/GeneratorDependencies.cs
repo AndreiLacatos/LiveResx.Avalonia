@@ -18,7 +18,8 @@ internal sealed class GeneratorDependencies
     /// </summary>
     internal static GeneratorDependencies Default { get; } = new GeneratorDependencies(
         timestampProvider: () => DateTimeOffset.UtcNow,
-        resourceDesignerDetector: Generators.ResourceDesignerDetector.Detect);
+        resourceDesignerDetector: Generators.ResourceDesignerDetector.Detect,
+        reactiveAssemblyDetector: Generators.ReactiveAssemblyDetector.Detect);
 
     /// <summary>
     /// Gets a factory for obtaining the current timestamp used in generated file headers.
@@ -34,13 +35,24 @@ internal sealed class GeneratorDependencies
     internal Func<Compilation, CancellationToken, IReadOnlyList<ResourceDesignerType>> ResourceDesignerDetector { get; }
 
     /// <summary>
+    /// Gets a function that detects whether the compilation references any
+    /// reactive assemblies (<c>System.Reactive</c>, <c>ReactiveUI</c>, or
+    /// <c>ReactiveUI.Avalonia</c>). In tests, inject a function that returns
+    /// a fixed value to control whether the observable extension is emitted.
+    /// </summary>
+    internal Func<Compilation, CancellationToken, bool> ReactiveAssemblyDetector { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="GeneratorDependencies"/> class.
     /// </summary>
     internal GeneratorDependencies(
         Func<DateTimeOffset> timestampProvider,
-        Func<Compilation, CancellationToken, IReadOnlyList<ResourceDesignerType>> resourceDesignerDetector)
+        Func<Compilation, CancellationToken, IReadOnlyList<ResourceDesignerType>> resourceDesignerDetector,
+        Func<Compilation, CancellationToken, bool> reactiveAssemblyDetector)
     {
         TimestampProvider = timestampProvider;
         ResourceDesignerDetector = resourceDesignerDetector;
+        ReactiveAssemblyDetector = reactiveAssemblyDetector;
     }
+
 }

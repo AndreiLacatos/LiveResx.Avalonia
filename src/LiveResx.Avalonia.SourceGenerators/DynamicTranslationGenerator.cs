@@ -37,6 +37,21 @@ public class DynamicTranslationGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(
             context.CompilationProvider,
             (ctx, _) => TranslateExtensionGenerator.Emit(ctx, ts));
+
+        // Detect whether the compilation references System.Reactive, ReactiveUI,
+        // or ReactiveUI.Avalonia. If so, emit a ToObservable() extension method
+        // on DynamicTranslation for reactive observable access.
+        var hasReactiveDeps = context.CompilationProvider
+            .Select((compilation, ct) =>
+                deps.ReactiveAssemblyDetector(compilation, ct));
+
+        context.RegisterSourceOutput(
+            hasReactiveDeps,
+            (ctx, hasRx) =>
+            {
+                if (hasRx)
+                    ToObservableExtensionGenerator.Emit(ctx, ts);
+            });
     }
 
     internal void ConfigureDependencies(GeneratorDependencies dependencies)
