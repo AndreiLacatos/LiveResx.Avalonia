@@ -88,9 +88,61 @@ DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
 
 // Switch back to English
 DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
+
+// Read the current locale
+CultureInfo current = DynamicLocalization.Instance.Locale;
 ```
 
 All controls using `{loc:Translate ...}` update automatically — no configuration, base class, or service registration required.
+
+### 5️⃣ Rx integration
+
+If your project references `System.Reactive` or `ReactiveUI`, three extension methods are emitted automatically:
+
+```csharp
+// Observe translation value changes
+IObservable<string> text = DynamicResources.Greeting.ToObservable();
+
+// Observe locale switches
+IObservable<CultureInfo> locale = DynamicLocalization.Instance.ObservableLocale();
+
+// Observe custom resource value changes
+IObservable<string> flag = DynamicLocalization.Instance
+    .GetResource<string>("CountryFlag").ToObservable();
+```
+
+All emit the current value immediately on subscribe, then on each subsequent change.
+
+### 6️⃣ Custom typed resources
+
+For non-string resources (images, enums, config objects) that also need to switch with culture:
+
+```csharp
+// Create a culture-aware resource with a fallback strategy
+var flag = new LocalizedResource<string>(
+    "CountryFlag",
+    new Dictionary<CultureInfo, string>
+    {
+        [CultureInfo.InvariantCulture] = "/Assets/default.svg",
+        [new CultureInfo("en")] = "/Assets/uk.svg",
+        [new CultureInfo("de")] = "/Assets/de.svg"
+    },
+    FallbackBehavior.Invariant);
+
+// Register it — it will refresh automatically on SwitchLocale
+DynamicLocalization.Instance.RegisterResource(flag);
+
+// Retrieve and use
+var currentFlag = DynamicLocalization.Instance.GetResource<string>("CountryFlag").Value;
+
+// Safe retrieval when unsure about type
+if (DynamicLocalization.Instance.TryGetResource<string>("CountryFlag", out var resource))
+{
+    // Use resource.Value
+}
+```
+
+Custom resources also support `ToObservable<T>()` when `System.Reactive` or `ReactiveUI` is referenced.
 
 ## Features
 
@@ -102,6 +154,9 @@ All controls using `{loc:Translate ...}` update automatically — no configurati
 * ✅ No localization service injection
 * ✅ No ViewModel properties for localized strings
 * ✅ No `INotifyPropertyChanged` boilerplate in application code
+* ✅ `ToObservable()` / `ObservableLocale()` extensions — when `System.Reactive` or `ReactiveUI` is referenced
+* ✅ `LocalizedResource<T>` — culture-aware typed values with `Invariant` or `ParentChain` fallback
+* ✅ `RegisterResource<T>()` / `GetResource<T>()` / `TryGetResource<T>()` — runtime custom resource registration
 
 ## How it works
 

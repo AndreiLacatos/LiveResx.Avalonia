@@ -147,6 +147,106 @@ public class DynamicLocalizationTests
         Assert.Equal(0, callCount);
     }
 
+    // ─── Custom resource registration ─────────────────────────
+
+    [Fact]
+    public void RegisterResource_AddsToLookup()
+    {
+        DynamicLocalization.Instance.Register([], _ => { });
+
+        var values = new Dictionary<CultureInfo, string>
+        {
+            [new CultureInfo("en")] = "Hello"
+        };
+        var resource = new LocalizedResource<string>("Greeting", values);
+        DynamicLocalization.Instance.RegisterResource(resource);
+
+        var retrieved = DynamicLocalization.Instance.GetResource<string>("Greeting");
+        Assert.Same(resource, retrieved);
+    }
+
+    [Fact]
+    public void RegisterResource_RefreshesImmediately()
+    {
+        DynamicLocalization.Instance.Register([], _ => { });
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
+
+        var values = new Dictionary<CultureInfo, string>
+        {
+            [new CultureInfo("en")] = "Hello"
+        };
+        var resource = new LocalizedResource<string>("Greeting", values);
+        DynamicLocalization.Instance.RegisterResource(resource);
+
+        Assert.Equal("Hello", resource.Value);
+    }
+
+    [Fact]
+    public void TryGetResource_ReturnsFalse_OnUnknownName()
+    {
+        DynamicLocalization.Instance.Register([], _ => { });
+
+        var found = DynamicLocalization.Instance.TryGetResource<string>("NonExistent", out var resource);
+
+        Assert.False(found);
+        Assert.Null(resource);
+    }
+
+    [Fact]
+    public void TryGetResource_ReturnsTrue_OnMatch()
+    {
+        DynamicLocalization.Instance.Register([], _ => { });
+
+        var values = new Dictionary<CultureInfo, string>
+        {
+            [new CultureInfo("en")] = "Hello"
+        };
+        var resource = new LocalizedResource<string>("Greeting", values);
+        DynamicLocalization.Instance.RegisterResource(resource);
+
+        var found = DynamicLocalization.Instance.TryGetResource<string>("Greeting", out var retrieved);
+
+        Assert.True(found);
+        Assert.Same(resource, retrieved);
+    }
+
+    [Fact]
+    public void TryGetResource_ReturnsFalse_OnTypeMismatch()
+    {
+        DynamicLocalization.Instance.Register([], _ => { });
+
+        var values = new Dictionary<CultureInfo, string>
+        {
+            [new CultureInfo("en")] = "Hello"
+        };
+        var resource = new LocalizedResource<string>("Greeting", values);
+        DynamicLocalization.Instance.RegisterResource(resource);
+
+        var found = DynamicLocalization.Instance.TryGetResource<int>("Greeting", out var retrieved);
+
+        Assert.False(found);
+        Assert.Null(retrieved);
+    }
+
+    [Fact]
+    public void SwitchLocale_RefreshesCustomResources()
+    {
+        DynamicLocalization.Instance.Register([], _ => { });
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
+
+        var values = new Dictionary<CultureInfo, string>
+        {
+            [new CultureInfo("en")] = "Hello",
+            [new CultureInfo("de")] = "Hallo"
+        };
+        var resource = new LocalizedResource<string>("Greeting", values);
+        DynamicLocalization.Instance.RegisterResource(resource);
+
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
+
+        Assert.Equal("Hallo", resource.Value);
+    }
+
     private static DynamicTranslation CreateTranslation(string key = "Hello")
     {
         return new DynamicTranslation(key, () => new ResourceManager(typeof(TestResources)));

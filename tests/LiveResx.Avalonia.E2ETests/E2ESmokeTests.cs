@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Globalization;
 using LiveResx.Avalonia;
 using Xunit;
@@ -87,5 +88,25 @@ public class E2ESmokeTests
             DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
             Assert.Contains(new CultureInfo("de"), results);
         }
+    }
+
+    [Fact]
+    public void CustomResource_Registered_SwitchesWithLocale()
+    {
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
+
+        var values = new Dictionary<CultureInfo, string>
+        {
+            [new CultureInfo("en")] = "Hello from custom",
+            [new CultureInfo("de")] = "Hallo aus benutzerdefiniert"
+        };
+        var resource = new LocalizedResource<string>("CustomGreeting", values);
+        DynamicLocalization.Instance.RegisterResource(resource);
+
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
+        Assert.Equal("Hallo aus benutzerdefiniert", resource.Value);
+
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
+        Assert.Equal("Hello from custom", resource.Value);
     }
 }

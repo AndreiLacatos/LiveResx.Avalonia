@@ -98,6 +98,34 @@
                     FontSize="15"
                     FontWeight="SemiBold"
                     Foreground="#0891B2"/>
+                <StackPanel
+                    HorizontalAlignment="Stretch"
+                    Margin="12"
+                    Spacing="8">
+
+                    <TextBlock
+                        Text="{loc:Translate {x:Static loc:DynamicResources.CustomResources}}"
+                        HorizontalAlignment="Center"
+                        TextAlignment="Center"
+                        FontSize="19"
+                        FontWeight="Bold"
+                        Foreground="#0891B2"/>
+
+                    <ItemsControl ItemsSource="{Binding CustomResources^}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    Text="{Binding}"
+                                    HorizontalAlignment="Center"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap"
+                                    FontSize="15"
+                                    Foreground="#0EA5E9"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -7,6 +7,16 @@ using System.Runtime.CompilerServices;
 namespace LiveResx.Avalonia
 {
     /// <summary>
+    /// Internal interface that allows <see cref="DynamicLocalization"/> to refresh all
+    /// registered custom resources without knowing their concrete type.
+    /// </summary>
+    internal interface ILocalizedResource
+    {
+        string Name { get; }
+        void Refresh(CultureInfo culture);
+    }
+
+    /// <summary>
     /// Provides the central entry point for managing application-wide locale (culture) switching.
     /// Use the <see cref="Instance"/> singleton to register <see cref="DynamicTranslation"/> bindings
     /// and a callback that updates the UI culture in your resource files.
@@ -29,6 +39,7 @@ namespace LiveResx.Avalonia
         }
 
         private readonly List<DynamicTranslation> _translations = new List<DynamicTranslation>();
+        private readonly Dictionary<string, ILocalizedResource> _customResources = new Dictionary<string, ILocalizedResource>();
         private Action<CultureInfo> _onCultureChange = _ => { };
 
         private CultureInfo _locale;
@@ -81,6 +92,64 @@ namespace LiveResx.Avalonia
             {
                 t.Refresh(culture);
             }
+            foreach (var r in _customResources.Values)
+            {
+                r.Refresh(culture);
+            }
+        }
+
+        /// <summary>
+        /// Registers a custom typed resource that will be refreshed automatically when
+        /// <see cref="SwitchLocale"/> is called. The resource is immediately refreshed
+        /// with the current locale.
+        /// </summary>
+        /// <typeparam name="T">The type of the resource value.</typeparam>
+        /// <param name="resource">The resource to register. Must not be <c>null</c>.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="resource"/> is <c>null</c>.</exception>
+        public void RegisterResource<T>(LocalizedResource<T> resource)
+        {
+            if (resource is null)
+            {
+                throw new ArgumentNullException(nameof(resource));
+            }
+
+            _customResources[resource.Name] = resource;
+            resource.Refresh(Locale);
+        }
+
+        /// <summary>
+        /// Gets a previously registered custom resource by name.
+        /// </summary>
+        /// <typeparam name="T">The type of the resource value.</typeparam>
+        /// <param name="name">The name of the resource to retrieve.</param>
+        /// <returns>The registered <see cref="LocalizedResource{T}"/> instance.</returns>
+        /// <exception cref="KeyNotFoundException">No resource with the specified name is registered.</exception>
+        /// <exception cref="InvalidCastException">The registered resource's type does not match <typeparamref name="T"/>.</exception>
+        public LocalizedResource<T> GetResource<T>(string name)
+        {
+            return (LocalizedResource<T>)_customResources[name];
+        }
+
+        /// <summary>
+        /// Tries to get a previously registered custom resource by name.
+        /// Returns <c>true</c> if the resource is found and the type matches;
+        /// otherwise <c>false</c>.
+        /// </summary>
+        /// <typeparam name="T">The type of the resource value.</typeparam>
+        /// <param name="name">The name of the resource to retrieve.</param>
+        /// <param name="resource">When this method returns, contains the registered resource
+        /// if found and type-compatible; otherwise <c>null</c>.</param>
+        /// <returns><c>true</c> if the resource was found and type-compatible; otherwise <c>false</c>.</returns>
+        public bool TryGetResource<T>(string name, out LocalizedResource<T> resource)
+        {
+            if (_customResources.TryGetValue(name, out var raw) && raw is LocalizedResource<T> typed)
+            {
+                resource = typed;
+                return true;
+            }
+
+            resource = null;
+            return false;
         }
 
         /// <inheritdoc/>

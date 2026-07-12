@@ -24,8 +24,10 @@ public class MainWindowViewModel : ReactiveObject
         {
             DynamicLocalization.Instance.SwitchLocale(new CultureInfo("fr"));
         });
+        CustomResources = DynamicLocalization.Instance.GetResource<string[]>("MyCustomResources").ToObservable();
     }
 
+    public IObservable<string[]> CustomResources { get; }
     public IObservable<string> LocaleLabel { get; }
     public ReactiveCommand<Unit, Unit> SetEnglish { get; }
     public ReactiveCommand<Unit, Unit> SetGerman { get; }

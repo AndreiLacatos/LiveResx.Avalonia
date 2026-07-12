@@ -5,8 +5,9 @@ namespace LiveResx.Avalonia.SourceGenerators.Generators;
 
     /// <summary>
     /// Emits the <c>LiveResx.Avalonia.DynamicTranslationExtensions.g.cs</c> source file
-    /// containing extension methods for <see cref="DynamicTranslation"/> and
-    /// <see cref="DynamicLocalization"/> that expose observable streams of their values.
+    /// containing extension methods for <see cref="DynamicTranslation"/>,
+    /// <see cref="DynamicLocalization"/>, and <see cref="LocalizedResource{T}"/>
+    /// that expose observable streams of their values.
     /// Only emitted when the compilation references <c>System.Reactive</c>,
     /// <c>ReactiveUI</c>, or <c>ReactiveUI.Avalonia</c>.
     /// </summary>
@@ -14,7 +15,7 @@ namespace LiveResx.Avalonia.SourceGenerators.Generators;
     {
         /// <summary>
         /// Emits the <c>LiveResx.Avalonia.DynamicTranslationExtensions.g.cs</c> source file
-        /// with both extension classes.
+        /// with all three extension classes.
         /// </summary>
         internal static void Emit(SourceProductionContext ctx, DateTimeOffset timestamp)
         {
@@ -84,6 +85,37 @@ namespace LiveResx.Avalonia.SourceGenerators.Generators;
                                             h => localization.PropertyChanged -= h)
                                         .Where(e => e.EventArgs.PropertyName == nameof(global::LiveResx.Avalonia.DynamicLocalization.Locale))
                                         .Select(_ => localization.Locale)));
+                        }
+                    }
+
+                    /// <summary>
+                    /// Extension methods for <see cref="LocalizedResource{T}"/> that provide
+                    /// reactive observable access to resource values.
+                    /// </summary>
+                    public static class LocalizedResourceExtensions
+                    {
+                        /// <summary>
+                        /// Returns an observable stream of <see cref="LocalizedResource{T}.Value"/>
+                        /// values. Immediately emits the current value upon subscription, then
+                        /// emits the new value each time the culture changes.
+                        /// </summary>
+                        /// <param name="resource">The localized resource to observe.</param>
+                        /// <returns>An observable that yields the current <see cref="LocalizedResource{T}.Value"/>
+                        /// followed by all subsequent values on culture switch.</returns>
+                        public static global::System.IObservable<T> ToObservable<T>(
+                            this global::LiveResx.Avalonia.LocalizedResource<T> resource)
+                        {
+                            return global::System.Reactive.Linq.Observable.Defer(() =>
+                                global::System.Reactive.Linq.Observable
+                                    .Return(resource.Value)
+                                    .Concat(global::System.Reactive.Linq.Observable
+                                        .FromEventPattern<
+                                            global::System.ComponentModel.PropertyChangedEventHandler,
+                                            global::System.ComponentModel.PropertyChangedEventArgs>(
+                                            h => resource.PropertyChanged += h,
+                                            h => resource.PropertyChanged -= h)
+                                        .Where(e => e.EventArgs.PropertyName == nameof(global::LiveResx.Avalonia.LocalizedResource<T>.Value))
+                                        .Select(_ => resource.Value)));
                         }
                     }
                 }

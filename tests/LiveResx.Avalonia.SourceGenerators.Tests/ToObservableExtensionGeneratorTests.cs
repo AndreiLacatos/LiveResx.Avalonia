@@ -77,6 +77,7 @@ public class ToObservableExtensionGeneratorTests
 
         Assert.Contains("DynamicTranslationExtensions", sourceText);
         Assert.Contains("DynamicLocalizationExtensions", sourceText);
+        Assert.Contains("LocalizedResourceExtensions", sourceText);
         Assert.Contains("ObservableLocale", sourceText);
         Assert.Contains("ToObservable", sourceText);
     }

@@ -17,4 +17,7 @@
     <data name="Awesome" xml:space="preserve">
         <value>Das ist großartig!</value>
     </data>
+    <data name="CustomResources" xml:space="preserve">
+        <value>Benutzerdefinierte Ressourcen</value>
+    </data>
 </root>
