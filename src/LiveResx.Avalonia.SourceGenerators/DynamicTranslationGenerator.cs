@@ -44,6 +44,12 @@ public class DynamicTranslationGenerator : IIncrementalGenerator
             combined,
             (ctx, pair) => LiveResxRegistrationGenerator.Emit(ctx, ts, pair.Left, pair.Right));
 
+        // Emit LRX001 warnings for duplicate / conflicting resource names
+        // across .resx keys and ILocalizedResource<T> class names.
+        context.RegisterSourceOutput(
+            combined,
+            (ctx, pair) => ResourceDiagnosticEmitter.Emit(ctx, pair.Left, pair.Right));
+
         // Emit the TranslateExtension markup extension for XAML data-binding.
         context.RegisterSourceOutput(
             context.CompilationProvider,
