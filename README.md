@@ -115,7 +115,96 @@ All emit the current value immediately on subscribe, then on each subsequent cha
 
 ### 6️⃣ Custom typed resources
 
-For non-string resources (images, enums, config objects) that also need to switch with culture:
+For culture-aware values defined in code rather than `.resx`, see the [Advanced Usage](#advanced-usage) section.
+
+## Features
+
+* ✅ Uses standard `.resx` resource files
+* ✅ Runtime language switching
+* ✅ Automatic UI updates
+* ✅ Strongly-typed translations generated at compile time
+* ✅ IntelliSense and compile-time checking
+* ✅ No localization service injection
+* ✅ No ViewModel properties for localized strings
+* ✅ No `INotifyPropertyChanged` boilerplate in application code
+* ✅ `ToObservable()` / `ObservableLocale()` extensions — when `System.Reactive` or `ReactiveUI` is referenced
+* ✅ `ILocalizedResource<T>` — define a class and the source generator auto-creates a `DynamicResources.*` property, registers it, and wires up culture switching
+* ✅ `LocalizedResource<T>` — culture-aware typed values with `Invariant` or `ParentChain` fallback
+* ✅ `RegisterResource<T>()` / `GetResource<T>()` / `TryGetResource<T>()` — runtime custom resource registration
+
+## How it works
+
+LiveResx.Avalonia consists of three parts:
+
+* **Runtime library** – manages translations and language switching.
+* **Source generator** – discovers `.resx` resources and generates strongly-typed translation objects.
+* **Markup extension** – connects generated translations to Avalonia bindings.
+
+Internally, every generated translation is represented by a small observable object. When the culture changes, the library updates all registered translations, causing Avalonia bindings to refresh automatically.
+
+## Advanced Usage
+
+### Source-generated custom resources (`ILocalizedResource<T>`)
+
+When you need a culture-switchable resource that is defined in **application code** rather than a `.resx` file — for example, paths to flag images, enum values, or configuration objects — implement `ILocalizedResource<T>` on a class.
+
+The source generator automatically discovers the class, creates a `LocalizedResource<T>` field, registers it with `DynamicLocalization`, and exposes it as a property on `DynamicResources`.
+
+#### 1. Define the resource
+
+```csharp
+using System.Collections.Generic;
+using System.Globalization;
+using LiveResx.Avalonia;
+
+internal sealed class CountryFlags : ILocalizedResource<string>
+{
+    public IReadOnlyDictionary<CultureInfo, string> Values { get; } =
+        new Dictionary<CultureInfo, string>
+        {
+            [CultureInfo.InvariantCulture] = "/Assets/default.svg",
+            [new CultureInfo("en")]          = "/Assets/uk.svg",
+            [new CultureInfo("de")]          = "/Assets/de.svg",
+        }.AsReadOnly();
+}
+```
+
+#### 2. Use it in XAML
+
+```xml
+<Image Source="{Binding Value, Source={x:Static loc:DynamicResources.CountryFlags}}" />
+```
+
+> **Note:** `DynamicResources.CountryFlags` returns a `LocalizedResource<string>` instance.
+> Binding to `Value` ensures the image source updates automatically when
+> `DynamicLocalization.SwitchLocale` is called, because `LocalizedResource<T>.Value`
+> raises `PropertyChanged`.
+
+#### 3. Imperative usage
+
+```csharp
+// Read the current value (snapshot of the active culture)
+string currentFlag = DynamicResources.CountryFlags.Value;
+
+// Switch locale — all bindings and .Value accessors update automatically
+DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
+```
+
+#### 4. Reactive extensions
+
+When `System.Reactive` or `ReactiveUI` is referenced, you can observe value changes:
+
+```csharp
+IObservable<string> flag = DynamicResources.CountryFlags.ToObservable();
+```
+
+The observable emits the current value immediately on subscribe, then on each culture switch.
+
+---
+
+### Manual custom resources (`LocalizedResource<T>`)
+
+If you prefer to create and manage resource instances in code instead of using the source generator:
 
 ```csharp
 // Create a culture-aware resource with a fallback strategy
@@ -133,7 +222,7 @@ var flag = new LocalizedResource<string>(
 DynamicLocalization.Instance.RegisterResource(flag);
 
 // Retrieve and use
-var currentFlag = DynamicLocalization.Instance.GetResource<string>("CountryFlag").Value;
+string currentFlag = DynamicLocalization.Instance.GetResource<string>("CountryFlag").Value;
 
 // Safe retrieval when unsure about type
 if (DynamicLocalization.Instance.TryGetResource<string>("CountryFlag", out var resource))
@@ -142,28 +231,6 @@ if (DynamicLocalization.Instance.TryGetResource<string>("CountryFlag", out var r
 }
 ```
 
-Custom resources also support `ToObservable<T>()` when `System.Reactive` or `ReactiveUI` is referenced.
+This is useful when the resource values are computed at runtime, loaded from a database, or when you need multiple instances of the same type.
 
-## Features
-
-* ✅ Uses standard `.resx` resource files
-* ✅ Runtime language switching
-* ✅ Automatic UI updates
-* ✅ Strongly-typed translations generated at compile time
-* ✅ IntelliSense and compile-time checking
-* ✅ No localization service injection
-* ✅ No ViewModel properties for localized strings
-* ✅ No `INotifyPropertyChanged` boilerplate in application code
-* ✅ `ToObservable()` / `ObservableLocale()` extensions — when `System.Reactive` or `ReactiveUI` is referenced
-* ✅ `LocalizedResource<T>` — culture-aware typed values with `Invariant` or `ParentChain` fallback
-* ✅ `RegisterResource<T>()` / `GetResource<T>()` / `TryGetResource<T>()` — runtime custom resource registration
-
-## How it works
-
-LiveResx.Avalonia consists of three parts:
-
-* **Runtime library** – manages translations and language switching.
-* **Source generator** – discovers `.resx` resources and generates strongly-typed translation objects.
-* **Markup extension** – connects generated translations to Avalonia bindings.
-
-Internally, every generated translation is represented by a small observable object. When the culture changes, the library updates all registered translations, causing Avalonia bindings to refresh automatically.
+Both approaches support `ToObservable<T>()` when `System.Reactive` or `ReactiveUI` is referenced.
