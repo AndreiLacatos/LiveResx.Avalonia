@@ -1,0 +1,201 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:CustomResourcesDemo"
+        xmlns:loc="clr-namespace:LiveResx.Avalonia"
+        mc:Ignorable="d"
+        d:DesignWidth="480"
+        d:DesignHeight="560"
+        x:Class="CustomResourcesDemo.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="CustomResourcesDemo"
+        Width="480"
+        Height="560"
+        WindowStartupLocation="CenterScreen"
+        Background="#F8FAFC">
+
+    <Window.Styles>
+        <Style Selector="Button.langBtn">
+            <Setter Property="Background" Value="#E2E8F0"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="0,10"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.18"/>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.18"/>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.18"/>
+                </Transitions>
+            </Setter>
+            <Style Selector="^:pointerover ContentPresenter">
+                <Setter Property="Background" Value="#CFFAFE"/>
+                <Setter Property="BorderBrush" Value="#67E8F9"/>
+                <Setter Property="Foreground" Value="#0E7490"/>
+            </Style>
+            <Style Selector="^:pressed ContentPresenter">
+                <Setter Property="Background" Value="#06B6D4"/>
+                <Setter Property="BorderBrush" Value="#0891B2"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Style>
+        </Style>
+
+        <Style Selector="TextBlock.sectionLabel">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style Selector="TextBlock.resxValue">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#334155"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style Selector="TextBlock.customValue">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#7C3AED"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+    </Window.Styles>
+
+    <ScrollViewer>
+        <Grid Margin="24">
+            <StackPanel Spacing="20">
+
+                <!-- Header -->
+                <TextBlock Text="CustomResources Demo"
+                           FontSize="26"
+                           FontWeight="Bold"
+                           Foreground="#0F172A"
+                           HorizontalAlignment="Center"/>
+
+                <TextBlock Text="Demonstrates standard .resx translations and typed custom resources (ILocalizedResource&lt;T&gt;)"
+                           TextWrapping="Wrap"
+                           FontSize="13"
+                           Foreground="#64748B"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"/>
+
+                <!-- Language Toggle -->
+                <Border CornerRadius="14"
+                        Background="#E2E8F0"
+                        Padding="4"
+                        HorizontalAlignment="Stretch"
+                        BoxShadow="0 8 24 #00000018">
+                    <Border CornerRadius="10"
+                            Background="#FFFFFF"
+                            Padding="6">
+                        <UniformGrid Columns="3"
+                                     ColumnSpacing="6">
+                            <Button Classes="langBtn"
+                                    Content="EN"
+                                    Command="{Binding SetEnglish}"/>
+                            <Button Classes="langBtn"
+                                    Content="DE"
+                                    Command="{Binding SetGerman}"/>
+                            <Button Classes="langBtn"
+                                    Content="FR"
+                                    Command="{Binding SetFrench}"/>
+                        </UniformGrid>
+                    </Border>
+                </Border>
+
+                <!-- .resx Resources Section -->
+                <Border CornerRadius="12"
+                        Background="#FFFFFF"
+                        Padding="16"
+                        BoxShadow="0 2 8 #00000010">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="📦 Standard .resx (via {loc:Translate})"
+                                   Classes="sectionLabel"/>
+
+                        <TextBlock>
+                            <Run Text="AppName: "
+                                 FontSize="13"
+                                 Foreground="#64748B"/>
+                            <Run Text="{loc:Translate {x:Static loc:DynamicResources.AppName}}"
+                                 FontSize="16"
+                                 FontWeight="SemiBold"
+                                 Foreground="#334155"/>
+                        </TextBlock>
+
+                        <TextBlock>
+                            <Run Text="HelloWorld: "
+                                 FontSize="13"
+                                 Foreground="#64748B"/>
+                            <Run Text="{loc:Translate {x:Static loc:DynamicResources.HelloWorld}}"
+                                 FontSize="16"
+                                 FontWeight="SemiBold"
+                                 Foreground="#334155"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- Custom String Resource Section -->
+                <Border CornerRadius="12"
+                        Background="#FFFFFF"
+                        Padding="16"
+                        BoxShadow="0 2 8 #00000010">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="⚡ Custom string resource (ILocalizedResource&lt;string&gt; via {Binding Value, Source=...})"
+                                   Classes="sectionLabel"/>
+
+                        <TextBlock>
+                            <Run Text="AppTagline: "
+                                 FontSize="13"
+                                 Foreground="#64748B"/>
+                            <Run Text="{Binding Value, Source={x:Static loc:DynamicResources.AppTagline}}"
+                                 FontSize="16"
+                                 FontWeight="SemiBold"
+                                 Foreground="#7C3AED"/>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- Custom Color Resource Section -->
+                <Border CornerRadius="12"
+                        Background="#FFFFFF"
+                        Padding="16"
+                        BoxShadow="0 2 8 #00000010">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="🎨 Custom Color resource (ILocalizedResource&lt;Color&gt; via ViewModel binding)"
+                                   Classes="sectionLabel"/>
+
+                        <Border CornerRadius="8"
+                                Height="48"
+                                Background="{Binding AccentBrush}"
+                                HorizontalAlignment="Stretch"
+                                BoxShadow="0 2 8 #00000020"/>
+
+                        <TextBlock>
+                            <Run Text="Current accent hex: "
+                                 FontSize="13"
+                                 Foreground="#64748B"/>
+                            <Run Text="{Binding AccentHex}"
+                                 FontSize="14"
+                                 FontWeight="SemiBold"
+                                 Foreground="#0F172A"/>
+                        </TextBlock>
+
+                        <TextBlock Text="AccentColor is defined in code as an ILocalizedResource&lt;Color&gt; with per-culture values. The ViewModel subscribes to changes via ToObservable()."
+                                   TextWrapping="Wrap"
+                                   FontSize="11"
+                                   Foreground="#94A3B8"/>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Window>
