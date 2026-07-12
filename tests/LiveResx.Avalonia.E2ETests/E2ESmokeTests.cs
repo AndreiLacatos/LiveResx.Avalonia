@@ -91,6 +91,31 @@ public class E2ESmokeTests
     }
 
     [Fact]
+    public void GeneratedCustomResource_ExposesLocalizedResource()
+    {
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
+
+        // The CustomLabels property returns the LocalizedResource<T> instance
+        // for data-binding via {Binding Value, Source={x:Static ...}}.
+        var resource = DynamicResources.CustomLabels;
+        Assert.NotNull(resource);
+        Assert.Equal("English", resource.Value);
+    }
+
+    [Fact]
+    public void GeneratedCustomResource_Value_UpdatesOnCultureSwitch()
+    {
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
+        var resource = DynamicResources.CustomLabels;
+
+        DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
+
+        // The LocalizedResource<T>.Value raises PropertyChanged, so
+        // data-bindings to it update automatically.
+        Assert.Equal("Deutsch", resource.Value);
+    }
+
+    [Fact]
     public void CustomResource_Registered_SwitchesWithLocale()
     {
         DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));

@@ -10,7 +10,7 @@ namespace LiveResx.Avalonia
     /// Internal interface that allows <see cref="DynamicLocalization"/> to refresh all
     /// registered custom resources without knowing their concrete type.
     /// </summary>
-    internal interface ILocalizedResource
+    internal interface IRefreshableResource
     {
         string Name { get; }
         void Refresh(CultureInfo culture);
@@ -39,7 +39,7 @@ namespace LiveResx.Avalonia
         }
 
         private readonly List<DynamicTranslation> _translations = new List<DynamicTranslation>();
-        private readonly Dictionary<string, ILocalizedResource> _customResources = new Dictionary<string, ILocalizedResource>();
+        private readonly Dictionary<string, IRefreshableResource> _customResources = new Dictionary<string, IRefreshableResource>();
         private Action<CultureInfo> _onCultureChange = _ => { };
 
         private CultureInfo _locale;

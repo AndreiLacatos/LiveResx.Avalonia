@@ -10,7 +10,8 @@ namespace LiveResx.Avalonia.SourceGenerators.Generators;
 /// Emits the <c>LiveResx.Avalonia.__LiveResxRegistration</c> class with a
 /// <see cref="System.Runtime.CompilerServices.ModuleInitializerAttribute"/> that calls
 /// <c>DynamicLocalization.Instance.Register</c> with all discovered
-/// <see cref="DynamicTranslation"/> properties and the correct culture-setter callback.
+/// <see cref="DynamicTranslation"/> properties and the correct culture-setter callback,
+/// followed by <c>RegisterResource</c> for each <see cref="ILocalizedResource{T}"/> implementor.
 /// </summary>
 internal static class LiveResxRegistrationGenerator
 {
@@ -19,11 +20,13 @@ internal static class LiveResxRegistrationGenerator
     /// </summary>
     /// <param name="ctx">The source production context.</param>
     /// <param name="timestamp">The timestamp captured in <see cref="GeneratorDependencies.TimestampProvider"/>.</param>
-    /// <param name="types">The resource designer types detected in the compilation.</param>
+    /// <param name="designerTypes">The resource designer types detected in the compilation.</param>
+    /// <param name="customTypes">The <see cref="ILocalizedResource{T}"/> implementors detected in the compilation.</param>
     internal static void Emit(
         SourceProductionContext ctx,
         DateTimeOffset timestamp,
-        IReadOnlyList<ResourceDesignerType> types)
+        IReadOnlyList<ResourceDesignerType> designerTypes,
+        IReadOnlyList<LocalizedResourceDescriptor> customTypes)
     {
         var sb = new StringBuilder();
         sb.Append(GeneratorHeader.Generate(timestamp));
@@ -35,7 +38,8 @@ internal static class LiveResxRegistrationGenerator
         sb.AppendLine("        internal static void Initialize()");
         sb.AppendLine("        {");
 
-        if (types.Count == 0)
+        // Register resx-based translations
+        if (designerTypes.Count == 0)
         {
             sb.AppendLine("            global::LiveResx.Avalonia.DynamicLocalization.Instance.Register(");
             sb.AppendLine("                new global::LiveResx.Avalonia.DynamicTranslation[0],");
@@ -47,7 +51,7 @@ internal static class LiveResxRegistrationGenerator
             sb.AppendLine("                new global::LiveResx.Avalonia.DynamicTranslation[]");
             sb.AppendLine("                {");
 
-            foreach (var type in types)
+            foreach (var type in designerTypes)
             {
                 foreach (var key in type.ResourceKeys)
                 {
@@ -59,12 +63,21 @@ internal static class LiveResxRegistrationGenerator
             sb.AppendLine("                culture =>");
             sb.AppendLine("                {");
 
-            foreach (var type in types)
+            foreach (var type in designerTypes)
             {
                 sb.AppendLine($"                    global::{type.FullTypeName}.Culture = culture;");
             }
 
             sb.AppendLine("                });");
+        }
+
+        // Register custom ILocalizedResource<T> implementations (after Register so Locale is set)
+        foreach (var custom in customTypes)
+        {
+            var fieldName = $"s_{custom.GetterName}";
+            sb.AppendLine();
+            sb.AppendLine("            global::LiveResx.Avalonia.DynamicLocalization.Instance.RegisterResource(");
+            sb.AppendLine($"                global::LiveResx.Avalonia.DynamicResources.{fieldName});");
         }
 
         sb.AppendLine("        }");

@@ -19,7 +19,8 @@ internal sealed class GeneratorDependencies
     internal static GeneratorDependencies Default { get; } = new GeneratorDependencies(
         timestampProvider: () => DateTimeOffset.UtcNow,
         resourceDesignerDetector: Generators.ResourceDesignerDetector.Detect,
-        reactiveAssemblyDetector: Generators.ReactiveAssemblyDetector.Detect);
+        reactiveAssemblyDetector: Generators.ReactiveAssemblyDetector.Detect,
+        customResourceDetector: Generators.CustomResourceDetector.Detect);
 
     /// <summary>
     /// Gets a factory for obtaining the current timestamp used in generated file headers.
@@ -43,16 +44,23 @@ internal sealed class GeneratorDependencies
     internal Func<Compilation, CancellationToken, bool> ReactiveAssemblyDetector { get; }
 
     /// <summary>
+    /// Gets a function that detects <see cref="ILocalizedResource{T}"/> implementors
+    /// in the compilation. In tests, inject a function that returns known descriptors.
+    /// </summary>
+    internal Func<Compilation, CancellationToken, IReadOnlyList<LocalizedResourceDescriptor>> CustomResourceDetector { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="GeneratorDependencies"/> class.
     /// </summary>
     internal GeneratorDependencies(
         Func<DateTimeOffset> timestampProvider,
         Func<Compilation, CancellationToken, IReadOnlyList<ResourceDesignerType>> resourceDesignerDetector,
-        Func<Compilation, CancellationToken, bool> reactiveAssemblyDetector)
+        Func<Compilation, CancellationToken, bool> reactiveAssemblyDetector,
+        Func<Compilation, CancellationToken, IReadOnlyList<LocalizedResourceDescriptor>> customResourceDetector)
     {
         TimestampProvider = timestampProvider;
         ResourceDesignerDetector = resourceDesignerDetector;
         ReactiveAssemblyDetector = reactiveAssemblyDetector;
+        CustomResourceDetector = customResourceDetector;
     }
-
 }

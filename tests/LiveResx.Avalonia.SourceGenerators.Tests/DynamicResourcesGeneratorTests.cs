@@ -52,6 +52,36 @@ public class DynamicResourcesGeneratorTests
     }
 
     [Fact]
+    public async Task CustomResource_ShouldGenerateExpectedOutput()
+    {
+        var source =
+            """
+            using System.Collections.Generic;
+            using System.Globalization;
+            using LiveResx.Avalonia;
+
+            namespace Translations
+            {
+                internal sealed class CustomLabels : ILocalizedResource<string>
+                {
+                    public IReadOnlyDictionary<CultureInfo, string> Values { get; } =
+                        new Dictionary<CultureInfo, string>
+                        {
+                            { new CultureInfo("en"), "English" },
+                            { new CultureInfo("de"), "Deutsch" },
+                        }.AsReadOnly();
+                }
+            }
+            """;
+
+        var (driver, diagnostics) = SourceGenerationRunner.Run(
+            source,
+            customDetectorOverride: LiveResx.Avalonia.SourceGenerators.Generators.CustomResourceDetector.Detect);
+        Assert.Empty(diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error));
+        await Verify(driver).UseDirectory(TestConstants.SnapshotsDirectory);
+    }
+
+    [Fact]
     public async Task InternalResourceDesigner_ShouldGenerateExpectedOutput()
     {
         var source =

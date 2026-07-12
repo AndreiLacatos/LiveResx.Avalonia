@@ -21,17 +21,28 @@ public class DynamicTranslationGenerator : IIncrementalGenerator
             .Select((compilation, ct) =>
                 deps.ResourceDesignerDetector(compilation, ct));
 
+        // Detect ILocalizedResource<T> implementors for custom typed resources.
+        var customTypes = context.CompilationProvider
+            .Select((compilation, ct) =>
+                deps.CustomResourceDetector(compilation, ct));
+
+        // Combine both detections into a single pipeline so that all resource
+        // metadata is available when emitting DynamicResources and registration.
+        var combined = resourceTypes.Combine(customTypes);
+
         // Emit a DynamicResources class with one static DynamicTranslation
-        // property per discovered resource key.
+        // property per discovered resource key, plus unwrapped getters for
+        // each ILocalizedResource<T> implementor.
         context.RegisterSourceOutput(
-            resourceTypes,
-            (ctx, types) => DynamicResourcesGenerator.Emit(ctx, ts, types));
+            combined,
+            (ctx, pair) => DynamicResourcesGenerator.Emit(ctx, ts, pair.Left, pair.Right));
 
         // Emit a [ModuleInitializer] that registers all discovered
-        // DynamicResources into DynamicLocalization on startup.
+        // DynamicResources into DynamicLocalization on startup, followed
+        // by RegisterResource for each ILocalizedResource<T> implementor.
         context.RegisterSourceOutput(
-            resourceTypes,
-            (ctx, types) => LiveResxRegistrationGenerator.Emit(ctx, ts, types));
+            combined,
+            (ctx, pair) => LiveResxRegistrationGenerator.Emit(ctx, ts, pair.Left, pair.Right));
 
         // Emit the TranslateExtension markup extension for XAML data-binding.
         context.RegisterSourceOutput(
@@ -39,8 +50,7 @@ public class DynamicTranslationGenerator : IIncrementalGenerator
             (ctx, _) => TranslateExtensionGenerator.Emit(ctx, ts));
 
         // Detect whether the compilation references System.Reactive, ReactiveUI,
-        // or ReactiveUI.Avalonia. If so, emit a ToObservable() extension method
-        // on DynamicTranslation for reactive observable access.
+        // or ReactiveUI.Avalonia. If so, emit ToObservable extension methods.
         var hasReactiveDeps = context.CompilationProvider
             .Select((compilation, ct) =>
                 deps.ReactiveAssemblyDetector(compilation, ct));

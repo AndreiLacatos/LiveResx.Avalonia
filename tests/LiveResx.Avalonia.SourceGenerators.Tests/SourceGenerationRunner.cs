@@ -34,12 +34,15 @@ internal static class SourceGenerationRunner
     /// <param name="reactiveDetectorOverride">Optional override for the reactive assembly
     /// detection function; defaults to <c>(_, _) =&gt; false</c> so ToObservable extensions
     /// are not emitted unless explicitly enabled.</param>
+    /// <param name="customDetectorOverride">Optional override for the custom resource
+    /// detection function; defaults to <see cref="CustomResourceDetector.Detect"/>.</param>
     /// <returns>A tuple of the <see cref="GeneratorDriver"/> (for snapshot verification)
     /// and the post-generation compilation diagnostics.</returns>
     internal static (GeneratorDriver driver, ImmutableArray<Diagnostic> diagnostics) Run(
         string source,
         Func<Compilation, CancellationToken, IReadOnlyList<ResourceDesignerType>>? detectorOverride = null,
-        Func<Compilation, CancellationToken, bool>? reactiveDetectorOverride = null)
+        Func<Compilation, CancellationToken, bool>? reactiveDetectorOverride = null,
+        Func<Compilation, CancellationToken, IReadOnlyList<LocalizedResourceDescriptor>>? customDetectorOverride = null)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
 
@@ -61,7 +64,8 @@ internal static class SourceGenerationRunner
         generator.ConfigureDependencies(new GeneratorDependencies(
             timestampProvider: () => FixedTimestamp,
             resourceDesignerDetector: detectorOverride ?? ResourceDesignerDetector.Detect,
-            reactiveAssemblyDetector: reactiveDetectorOverride ?? ((_, _) => false)));
+            reactiveAssemblyDetector: reactiveDetectorOverride ?? ((_, _) => false),
+            customResourceDetector: customDetectorOverride ?? ((_, _) => new List<LocalizedResourceDescriptor>())));
 
         var driver = CSharpGeneratorDriver.Create(generator)
             .RunGenerators(compilation);

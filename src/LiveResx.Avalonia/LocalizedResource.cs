@@ -13,7 +13,7 @@ namespace LiveResx.Avalonia
     /// when <see cref="DynamicLocalization.SwitchLocale"/> is called.
     /// </summary>
     /// <typeparam name="T">The type of the resource value.</typeparam>
-    public sealed class LocalizedResource<T> : ILocalizedResource, INotifyPropertyChanged
+    public sealed class LocalizedResource<T> : IRefreshableResource, INotifyPropertyChanged
     {
         private readonly Dictionary<CultureInfo, T> _values;
         private readonly string _name;
@@ -80,7 +80,7 @@ namespace LiveResx.Avalonia
             Value = ResolveValue(culture);
         }
 
-        void ILocalizedResource.Refresh(CultureInfo culture)
+        void IRefreshableResource.Refresh(CultureInfo culture)
         {
             Refresh(culture);
         }
