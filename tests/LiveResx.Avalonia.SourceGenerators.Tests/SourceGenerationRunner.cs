@@ -25,17 +25,21 @@ internal static class SourceGenerationRunner
     /// Parses <paramref name="source"/>, creates a compilation referencing the core
     /// <c>LiveResx.Avalonia</c> library and all .NET 9.0 base assemblies, then runs
     /// the source generator with a fixed timestamp and the real
-    /// <see cref="ResourceDesignerDetector"/> (or an optional override).
+    /// <see cref="ResourceDesignerDetector"/> (or optional overrides).
     /// </summary>
     /// <param name="source">The C# source code to compile, typically containing a
     /// synthetic resource designer type.</param>
     /// <param name="detectorOverride">Optional override for the resource designer
     /// detection function; defaults to <see cref="ResourceDesignerDetector.Detect"/>.</param>
+    /// <param name="reactiveDetectorOverride">Optional override for the reactive assembly
+    /// detection function; defaults to <c>(_, _) =&gt; false</c> so ToObservable extensions
+    /// are not emitted unless explicitly enabled.</param>
     /// <returns>A tuple of the <see cref="GeneratorDriver"/> (for snapshot verification)
     /// and the post-generation compilation diagnostics.</returns>
     internal static (GeneratorDriver driver, ImmutableArray<Diagnostic> diagnostics) Run(
         string source,
-        Func<Compilation, CancellationToken, IReadOnlyList<ResourceDesignerType>>? detectorOverride = null)
+        Func<Compilation, CancellationToken, IReadOnlyList<ResourceDesignerType>>? detectorOverride = null,
+        Func<Compilation, CancellationToken, bool>? reactiveDetectorOverride = null)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
 
@@ -57,7 +61,7 @@ internal static class SourceGenerationRunner
         generator.ConfigureDependencies(new GeneratorDependencies(
             timestampProvider: () => FixedTimestamp,
             resourceDesignerDetector: detectorOverride ?? ResourceDesignerDetector.Detect,
-            reactiveAssemblyDetector: (_, _) => false));
+            reactiveAssemblyDetector: reactiveDetectorOverride ?? ((_, _) => false)));
 
         var driver = CSharpGeneratorDriver.Create(generator)
             .RunGenerators(compilation);

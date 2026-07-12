@@ -85,6 +85,68 @@ public class DynamicLocalizationTests
         Assert.Equal("Hallo, Welt!", t2.Text);
     }
 
+    // ─── Locale property + INPC ───────────────────────────────
+
+    [Fact]
+    public void Locale_AfterRegister_EqualsCurrentUICulture()
+    {
+        DynamicLocalization.Instance.Register([], _ => { });
+
+        Assert.Equal(CultureInfo.CurrentUICulture, DynamicLocalization.Instance.Locale);
+    }
+
+    [Fact]
+    public void SwitchLocale_UpdatesLocaleProperty()
+    {
+        DynamicLocalization.Instance.Register([], _ => { });
+
+        var expected = new CultureInfo("de");
+        DynamicLocalization.Instance.SwitchLocale(expected);
+
+        Assert.Equal(expected, DynamicLocalization.Instance.Locale);
+    }
+
+    [Fact]
+    public void SwitchLocale_RaisesPropertyChanged()
+    {
+        DynamicLocalization.Instance.Register([], _ => { });
+
+        // Pick a culture guaranteed to differ from the current one
+        var current = DynamicLocalization.Instance.Locale;
+        var target = current.Name == "de" ? new CultureInfo("fr") : new CultureInfo("de");
+
+        var raisedProperty = string.Empty;
+        DynamicLocalization.Instance.PropertyChanged += (_, e) =>
+            raisedProperty = e.PropertyName!;
+
+        DynamicLocalization.Instance.SwitchLocale(target);
+
+        Assert.Equal("Locale", raisedProperty);
+    }
+
+    [Fact]
+    public void SwitchLocale_SameLocale_DoesNotRaisePropertyChanged()
+    {
+        DynamicLocalization.Instance.Register([], _ => { });
+
+        // First, switch to a culture different from the current one
+        var current = DynamicLocalization.Instance.Locale;
+        var target = current.Name == "de" ? new CultureInfo("fr") : new CultureInfo("de");
+        DynamicLocalization.Instance.SwitchLocale(target);
+
+        var callCount = 0;
+        DynamicLocalization.Instance.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == "Locale")
+                callCount++;
+        };
+
+        // Switch to the same culture again — should be a no-op
+        DynamicLocalization.Instance.SwitchLocale(target);
+
+        Assert.Equal(0, callCount);
+    }
+
     private static DynamicTranslation CreateTranslation(string key = "Hello")
     {
         return new DynamicTranslation(key, () => new ResourceManager(typeof(TestResources)));
