@@ -26,7 +26,7 @@ LiveResx.Avalonia aims to provide a small, strongly-typed alternative that feels
 
 ### 📋 Prerequisites
 
-- **Avalonia 11.0** or later
+- **Avalonia 11.3** or later
 - **Standard `.resx` resources** with `PublicResXFileCodeGenerator` or `InternalResXFileCodeGenerator`
 
 ---

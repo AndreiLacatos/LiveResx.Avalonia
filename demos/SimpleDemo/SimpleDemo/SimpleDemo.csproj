@@ -16,7 +16,7 @@
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.8"/>
         <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.18"/>
         <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.18"/>
-        <PackageReference Include="LiveResx.Avalonia" Version="1.0.0" />
+        <PackageReference Include="LiveResx.Avalonia" Version="1.0.3" />
     </ItemGroup>
 
     <ItemGroup>
