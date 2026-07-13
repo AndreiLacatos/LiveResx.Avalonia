@@ -32,9 +32,12 @@ internal static class LiveResxRegistrationGenerator
         sb.Append(GeneratorHeader.Generate(timestamp));
         sb.AppendLine("namespace LiveResx.Avalonia");
         sb.AppendLine("{");
+        sb.AppendLine("    " + GeneratorHeader.GeneratedCodeAttribute);
+        sb.AppendLine("    [global::System.Diagnostics.DebuggerNonUserCode]");
+        sb.AppendLine("    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]");
         sb.AppendLine("    internal static class __LiveResxRegistration");
         sb.AppendLine("    {");
-        sb.AppendLine("        [System.Runtime.CompilerServices.ModuleInitializer]");
+        sb.AppendLine("        [global::System.Runtime.CompilerServices.ModuleInitializer]");
         sb.AppendLine("        internal static void Initialize()");
         sb.AppendLine("        {");
 

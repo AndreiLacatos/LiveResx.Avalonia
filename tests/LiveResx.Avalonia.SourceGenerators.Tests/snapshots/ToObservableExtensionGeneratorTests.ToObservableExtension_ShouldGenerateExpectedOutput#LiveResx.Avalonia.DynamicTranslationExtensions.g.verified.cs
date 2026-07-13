@@ -13,14 +13,15 @@
 #nullable enable
 #pragma warning disable
 
-using System.Reactive.Linq;
-
 namespace LiveResx.Avalonia
 {
     /// <summary>
     /// Extension methods for <see cref="DynamicTranslation"/> that provide
     /// reactive observable access to translation values.
     /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("LiveResx.Avalonia.SourceGenerators", "0.1.0")]
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class DynamicTranslationExtensions
     {
         /// <summary>
@@ -35,16 +36,17 @@ namespace LiveResx.Avalonia
             this global::LiveResx.Avalonia.DynamicTranslation translation)
         {
             return global::System.Reactive.Linq.Observable.Defer(() =>
-                global::System.Reactive.Linq.Observable
-                    .Return(translation.Text)
-                    .Concat(global::System.Reactive.Linq.Observable
-                        .FromEventPattern<
-                            global::System.ComponentModel.PropertyChangedEventHandler,
-                            global::System.ComponentModel.PropertyChangedEventArgs>(
-                            h => translation.PropertyChanged += h,
-                            h => translation.PropertyChanged -= h)
-                        .Where(e => e.EventArgs.PropertyName == nameof(global::LiveResx.Avalonia.DynamicTranslation.Text))
-                        .Select(_ => translation.Text)));
+                global::System.Reactive.Linq.Observable.Concat(
+                    global::System.Reactive.Linq.Observable.Return(translation.Text),
+                    global::System.Reactive.Linq.Observable.Select(
+                        global::System.Reactive.Linq.Observable.Where(
+                            global::System.Reactive.Linq.Observable.FromEventPattern<
+                                global::System.ComponentModel.PropertyChangedEventHandler,
+                                global::System.ComponentModel.PropertyChangedEventArgs>(
+                                h => translation.PropertyChanged += h,
+                                h => translation.PropertyChanged -= h),
+                            e => e.EventArgs.PropertyName == nameof(global::LiveResx.Avalonia.DynamicTranslation.Text)),
+                        _ => translation.Text)));
         }
     }
 
@@ -52,6 +54,9 @@ namespace LiveResx.Avalonia
     /// Extension methods for <see cref="DynamicLocalization"/> that provide
     /// reactive observable access to the current locale.
     /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("LiveResx.Avalonia.SourceGenerators", "0.1.0")]
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class DynamicLocalizationExtensions
     {
         /// <summary>
@@ -67,16 +72,17 @@ namespace LiveResx.Avalonia
             this global::LiveResx.Avalonia.DynamicLocalization localization)
         {
             return global::System.Reactive.Linq.Observable.Defer(() =>
-                global::System.Reactive.Linq.Observable
-                    .Return(localization.Locale)
-                    .Concat(global::System.Reactive.Linq.Observable
-                        .FromEventPattern<
-                            global::System.ComponentModel.PropertyChangedEventHandler,
-                            global::System.ComponentModel.PropertyChangedEventArgs>(
-                            h => localization.PropertyChanged += h,
-                            h => localization.PropertyChanged -= h)
-                        .Where(e => e.EventArgs.PropertyName == nameof(global::LiveResx.Avalonia.DynamicLocalization.Locale))
-                        .Select(_ => localization.Locale)));
+                global::System.Reactive.Linq.Observable.Concat(
+                    global::System.Reactive.Linq.Observable.Return(localization.Locale),
+                    global::System.Reactive.Linq.Observable.Select(
+                        global::System.Reactive.Linq.Observable.Where(
+                            global::System.Reactive.Linq.Observable.FromEventPattern<
+                                global::System.ComponentModel.PropertyChangedEventHandler,
+                                global::System.ComponentModel.PropertyChangedEventArgs>(
+                                h => localization.PropertyChanged += h,
+                                h => localization.PropertyChanged -= h),
+                            e => e.EventArgs.PropertyName == nameof(global::LiveResx.Avalonia.DynamicLocalization.Locale)),
+                        _ => localization.Locale)));
         }
     }
 
@@ -84,6 +90,9 @@ namespace LiveResx.Avalonia
     /// Extension methods for <see cref="LocalizedResource{T}"/> that provide
     /// reactive observable access to resource values.
     /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("LiveResx.Avalonia.SourceGenerators", "0.1.0")]
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class LocalizedResourceExtensions
     {
         /// <summary>
@@ -98,16 +107,17 @@ namespace LiveResx.Avalonia
             this global::LiveResx.Avalonia.LocalizedResource<T> resource)
         {
             return global::System.Reactive.Linq.Observable.Defer(() =>
-                global::System.Reactive.Linq.Observable
-                    .Return(resource.Value)
-                    .Concat(global::System.Reactive.Linq.Observable
-                        .FromEventPattern<
-                            global::System.ComponentModel.PropertyChangedEventHandler,
-                            global::System.ComponentModel.PropertyChangedEventArgs>(
-                            h => resource.PropertyChanged += h,
-                            h => resource.PropertyChanged -= h)
-                        .Where(e => e.EventArgs.PropertyName == nameof(global::LiveResx.Avalonia.LocalizedResource<T>.Value))
-                        .Select(_ => resource.Value)));
+                global::System.Reactive.Linq.Observable.Concat(
+                    global::System.Reactive.Linq.Observable.Return(resource.Value),
+                    global::System.Reactive.Linq.Observable.Select(
+                        global::System.Reactive.Linq.Observable.Where(
+                            global::System.Reactive.Linq.Observable.FromEventPattern<
+                                global::System.ComponentModel.PropertyChangedEventHandler,
+                                global::System.ComponentModel.PropertyChangedEventArgs>(
+                                h => resource.PropertyChanged += h,
+                                h => resource.PropertyChanged -= h),
+                            e => e.EventArgs.PropertyName == nameof(global::LiveResx.Avalonia.LocalizedResource<T>.Value)),
+                        _ => resource.Value)));
         }
     }
 }

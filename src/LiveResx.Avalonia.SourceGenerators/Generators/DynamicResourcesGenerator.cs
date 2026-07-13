@@ -31,6 +31,9 @@ internal static class DynamicResourcesGenerator
         sb.Append(GeneratorHeader.Generate(timestamp));
         sb.AppendLine("namespace LiveResx.Avalonia");
         sb.AppendLine("{");
+        sb.AppendLine("    " + GeneratorHeader.GeneratedCodeAttribute);
+        sb.AppendLine("    [global::System.Diagnostics.DebuggerNonUserCode]");
+        sb.AppendLine("    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]");
         sb.AppendLine("    public static class DynamicResources");
         sb.AppendLine("    {");
 

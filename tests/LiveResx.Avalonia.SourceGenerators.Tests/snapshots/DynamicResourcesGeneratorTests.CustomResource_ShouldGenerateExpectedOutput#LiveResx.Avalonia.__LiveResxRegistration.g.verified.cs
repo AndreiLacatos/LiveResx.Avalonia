@@ -15,9 +15,12 @@
 
 namespace LiveResx.Avalonia
 {
+    [global::System.CodeDom.Compiler.GeneratedCode("LiveResx.Avalonia.SourceGenerators", "0.1.0")]
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal static class __LiveResxRegistration
     {
-        [System.Runtime.CompilerServices.ModuleInitializer]
+        [global::System.Runtime.CompilerServices.ModuleInitializer]
         internal static void Initialize()
         {
             global::LiveResx.Avalonia.DynamicLocalization.Instance.Register(

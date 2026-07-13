@@ -15,6 +15,9 @@
 
 namespace LiveResx.Avalonia
 {
+    [global::System.CodeDom.Compiler.GeneratedCode("LiveResx.Avalonia.SourceGenerators", "0.1.0")]
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class DynamicResources
     {
 

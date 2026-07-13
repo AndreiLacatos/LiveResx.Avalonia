@@ -19,6 +19,9 @@ namespace LiveResx.Avalonia
     /// Provides a markup extension that returns a data-binding to a <see cref="DynamicTranslation"/> instance,
     /// enabling automatic UI updates when the application culture changes.
     /// </summary>
+    [global::System.CodeDom.Compiler.GeneratedCode("LiveResx.Avalonia.SourceGenerators", "0.1.0")]
+    [global::System.Diagnostics.DebuggerNonUserCode]
+    [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public sealed class TranslateExtension
     {
         private readonly global::LiveResx.Avalonia.DynamicTranslation _translation;
