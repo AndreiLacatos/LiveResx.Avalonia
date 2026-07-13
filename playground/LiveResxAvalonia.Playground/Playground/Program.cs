@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using System;
 using Avalonia.ReactiveUI;
 
 namespace Playground;
@@ -18,9 +17,6 @@ class Program
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .UseReactiveUI()
-#if DEBUG
-            .WithDeveloperTools()
-#endif
             .WithInterFont()
             .LogToTrace();
 }
