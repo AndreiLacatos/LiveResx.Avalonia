@@ -37,6 +37,9 @@ internal static class GeneratorHeader
             //  Generated: {ts}
             //  Version:   {ver}
             //
+            #nullable enable
+            #pragma warning disable
+
 
             """;
     }

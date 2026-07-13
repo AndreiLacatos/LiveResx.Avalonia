@@ -10,6 +10,9 @@
 //  Generated: 2024/01/15 10:00:00 UTC
 //  Version:   0.1.0
 //
+#nullable enable
+#pragma warning disable
+
 namespace LiveResx.Avalonia
 {
     /// <summary>
