@@ -234,3 +234,21 @@ if (DynamicLocalization.Instance.TryGetResource<string>("CountryFlag", out var r
 This is useful when the resource values are computed at runtime, loaded from a database, or when you need multiple instances of the same type.
 
 Both approaches support `ToObservable<T>()` when `System.Reactive` or `ReactiveUI` is referenced.
+
+---
+
+### Composite format strings (`TranslateFormatExtension`)
+
+For localized strings that contain placeholders (e.g. `"Hello, {0}!"`), use `TranslateFormat` to bind the format template and arguments separately:
+
+```xml
+<TextBlock>
+  <TextBlock.Text>
+    <loc:TranslateFormat Template="{x:Static loc:DynamicResources.WelcomeMessage}">
+      <Binding Path="UserName" />
+    </loc:TranslateFormat>
+  </TextBlock.Text>
+</TextBlock>
+```
+
+The UI is automatically updated when either the bound value (`UserName`) changes or the localized template is refreshed due to a culture change.
