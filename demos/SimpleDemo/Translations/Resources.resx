@@ -24,4 +24,7 @@
     <data name="Awesome" xml:space="preserve">
         <value>This is awesome!</value>
     </data>
+    <data name="Time" xml:space="preserve">
+        <value>The time is: {0}</value>
+    </data>
 </root>

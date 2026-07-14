@@ -1,9 +1,14 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:simpleDemo="clr-namespace:SimpleDemo"
              x:Class="SimpleDemo.App"
              RequestedThemeVariant="Default">
 
     <Application.Styles>
         <FluentTheme/>
     </Application.Styles>
+
+    <Application.Resources>
+        <simpleDemo:DateTimeOffsetFormatter x:Key="DateTimeFormatter" />
+    </Application.Resources>
 </Application>

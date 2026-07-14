@@ -90,6 +90,19 @@
                     FontSize="15"
                     FontWeight="SemiBold"
                     Foreground="#0891B2"/>
+                <TextBlock
+                    HorizontalAlignment="Stretch"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
+                    FontSize="15"
+                    FontWeight="SemiBold"
+                    Foreground="#0891B2">
+                    <TextBlock.Text>
+                        <loc:TranslateFormat Template="{x:Static loc:DynamicResources.Time}">
+                            <Binding Path="Time^" Converter="{StaticResource DateTimeFormatter}"/>
+                        </loc:TranslateFormat>
+                    </TextBlock.Text>
+                </TextBlock>
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Reactive;
+using System.Reactive.Linq;
 using ReactiveUI;
 
 namespace SimpleDemo;
@@ -25,6 +26,9 @@ public class MainWindowViewModel : ReactiveObject
             Locale = "fr";
             LiveResx.Avalonia.DynamicLocalization.Instance.SwitchLocale(new CultureInfo("fr"));
         });
+        Time = Observable.Interval(TimeSpan.FromMinutes(1))
+            .StartWith(0L)
+            .Select(_ => DateTimeOffset.Now);
     }
 
     public string Locale { get; set => this.RaiseAndSetIfChanged(ref field, value); }
@@ -32,4 +36,5 @@ public class MainWindowViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit> SetEnglish { get; }
     public ReactiveCommand<Unit, Unit> SetGerman { get; }
     public ReactiveCommand<Unit, Unit> SetFrench { get; }
+    public IObservable<DateTimeOffset> Time { get; }
 }
