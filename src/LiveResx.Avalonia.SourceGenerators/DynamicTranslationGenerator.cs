@@ -55,6 +55,12 @@ public class DynamicTranslationGenerator : IIncrementalGenerator
             context.CompilationProvider,
             (ctx, _) => TranslateExtensionGenerator.Emit(ctx, ts));
 
+        // Emit the TranslateFormatExtension markup extension for composite string formatting
+        // with data-bound arguments in XAML.
+        context.RegisterSourceOutput(
+            context.CompilationProvider,
+            (ctx, _) => TranslateFormatExtensionGenerator.Emit(ctx, ts));
+
         // Detect whether the compilation references System.Reactive, ReactiveUI,
         // or ReactiveUI.Avalonia. If so, emit ToObservable extension methods.
         var hasReactiveDeps = context.CompilationProvider

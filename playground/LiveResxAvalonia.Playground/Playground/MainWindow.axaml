@@ -4,7 +4,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Playground"
         xmlns:loc="clr-namespace:LiveResx.Avalonia"
-        xmlns:avalonia="clr-namespace:LiveResx.Avalonia;assembly=LiveResx.Avalonia"
         mc:Ignorable="d"
         d:DesignWidth="400"
         d:DesignHeight="400"
@@ -134,9 +133,9 @@
                     FontWeight="SemiBold"
                     Foreground="#0891B2">
                     <TextBlock.Text>
-                        <avalonia:LiveFormat Key="{x:Static loc:DynamicResources.WelcomeUser}">
-                            <Binding Path="UserName^"/>
-                        </avalonia:LiveFormat>
+                        <loc:TranslateFormat Template="{x:Static loc:DynamicResources.WelcomeUser}">
+                            <Binding Path="UserName^" FallbackValue="-"/>
+                        </loc:TranslateFormat>
                     </TextBlock.Text>
                 </TextBlock>
             </StackPanel>

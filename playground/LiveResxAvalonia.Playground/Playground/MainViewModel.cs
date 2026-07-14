@@ -25,8 +25,7 @@ public class MainWindowViewModel : ReactiveObject
             DynamicLocalization.Instance.SwitchLocale(new CultureInfo("fr"));
         });
         CustomResources = DynamicLocalization.Instance.GetResource<string[]>("MyCustomResources").ToObservable();
-        UserName = Observable.Interval(TimeSpan.FromSeconds(1))
-            .StartWith(0L)
+        UserName = Observable.Interval(TimeSpan.FromSeconds(2))
             .Select(tick => tick % 2 == 0 ? "John" : "Doe");
     }
 
