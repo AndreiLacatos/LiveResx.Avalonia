@@ -99,6 +99,12 @@ jobs:
 
       - name: Push to NuGet.org
         run: |
-          dotnet nuget push "publish/*.*nupkg" \
+          dotnet nuget push publish/LiveResx.Avalonia.$PKG_VERSION.nupkg \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json
+
+      - name: Push symbols
+        run: |
+          dotnet nuget push publish/LiveResx.Avalonia.$PKG_VERSION.snupkg \
             --api-key ${{ secrets.NUGET_API_KEY }} \
             --source https://api.nuget.org/v3/index.json
