@@ -62,5 +62,11 @@ namespace Translations {
                 return ResourceManager.GetString("CustomResources", resourceCulture);
             }
         }
+        
+        public static string WelcomeUser {
+            get {
+                return ResourceManager.GetString("WelcomeUser", resourceCulture);
+            }
+        }
     }
 }

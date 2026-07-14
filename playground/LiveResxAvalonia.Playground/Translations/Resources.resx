@@ -27,4 +27,7 @@
     <data name="CustomResources" xml:space="preserve">
         <value>Custom resources</value>
     </data>
+    <data name="WelcomeUser" xml:space="preserve">
+        <value>Hello {0}!</value>
+    </data>
 </root>
