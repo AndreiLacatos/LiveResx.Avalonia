@@ -87,7 +87,6 @@ namespace LiveResx.Avalonia
         public void SwitchLocale(CultureInfo culture)
         {
             Locale = culture;
-            _onCultureChange(culture);
             foreach (var t in _translations)
             {
                 t.Refresh(culture);
@@ -96,6 +95,7 @@ namespace LiveResx.Avalonia
             {
                 r.Refresh(culture);
             }
+            _onCultureChange(culture);
         }
 
         /// <summary>
