@@ -101,12 +101,12 @@ jobs:
         run: |
           dotnet nuget push publish/LiveResx.Avalonia.$PKG_VERSION.nupkg \
             --api-key ${{ secrets.NUGET_API_KEY }} \
-            --source https://api.nuget.org/v3/index.json
+            --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
 
       - name: Push symbols
         run: |
           dotnet nuget push publish/LiveResx.Avalonia.$PKG_VERSION.snupkg \
             --api-key ${{ secrets.NUGET_API_KEY }} \
-            --source https://api.nuget.org/v3/index.json
+            --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
