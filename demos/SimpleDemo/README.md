@@ -11,7 +11,7 @@ A minimal Avalonia application demonstrating **LiveResx.Avalonia** — runtime l
 ## Prerequisites
 
 - .NET 10 SDK
-- Avalonia 11.3+
+- Avalonia 12.0+
 
 ## Run
 

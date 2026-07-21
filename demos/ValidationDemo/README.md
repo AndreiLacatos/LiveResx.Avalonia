@@ -14,7 +14,7 @@ A form validation demo that shows **`.ToObservable()`** in action — reactive, 
 ## Prerequisites
 
 - .NET 10 SDK
-- Avalonia 11.3+
+- Avalonia 12.0+
 
 ## Run
 

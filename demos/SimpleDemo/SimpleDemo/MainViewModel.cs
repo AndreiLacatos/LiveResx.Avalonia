@@ -11,20 +11,23 @@ public class MainWindowViewModel : ReactiveObject
     {
         Locale = "en";
 
-        SetEnglish = ReactiveCommand.Create(() =>
+        SetEnglish = ReactiveCommand.Create<Unit, Unit>(_ =>
         {
             Locale = "en";
             LiveResx.Avalonia.DynamicLocalization.Instance.SwitchLocale(new CultureInfo("en"));
+            return Unit.Default;
         });
-        SetGerman = ReactiveCommand.Create(() =>
+        SetGerman = ReactiveCommand.Create<Unit, Unit>(_ =>
         {
             Locale = "de";
             LiveResx.Avalonia.DynamicLocalization.Instance.SwitchLocale(new CultureInfo("de"));
+            return Unit.Default;
         });
-        SetFrench = ReactiveCommand.Create(() =>
+        SetFrench = ReactiveCommand.Create<Unit, Unit>(_ =>
         {
             Locale = "fr";
             LiveResx.Avalonia.DynamicLocalization.Instance.SwitchLocale(new CultureInfo("fr"));
+            return Unit.Default;
         });
         Time = Observable.Interval(TimeSpan.FromMinutes(1))
             .StartWith(0L)

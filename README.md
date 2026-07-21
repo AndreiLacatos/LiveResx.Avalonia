@@ -29,6 +29,8 @@ LiveResx.Avalonia aims to provide a small, strongly-typed alternative that feels
 - **Avalonia 11.3** or later
 - **Standard `.resx` resources** with `PublicResXFileCodeGenerator` or `InternalResXFileCodeGenerator`
 
+> **💡 Note:** Use `1.x.x` with Avalonia >= **11.3.0** and < **12.0.0**, and 2.x.x with Avalonia >= **12.0.0**.
+
 ---
 
 ### 📦 Installation
