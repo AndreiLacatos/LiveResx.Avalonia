@@ -41,8 +41,8 @@ internal static class TranslateFormatExtensionGenerator
         sb.AppendLine("        /// Gets the collection of bindings that supply the format arguments.");
         sb.AppendLine("        /// </summary>");
         sb.AppendLine("        [global::Avalonia.Metadata.Content]");
-        sb.AppendLine("        public global::System.Collections.Generic.IList<global::Avalonia.Data.IBinding> Bindings { get; } =");
-        sb.AppendLine("            new global::System.Collections.Generic.List<global::Avalonia.Data.IBinding>();");
+        sb.AppendLine("        public global::System.Collections.Generic.IList<global::Avalonia.Data.BindingBase> Bindings { get; } =");
+        sb.AppendLine("            new global::System.Collections.Generic.List<global::Avalonia.Data.BindingBase>();");
         sb.AppendLine();
         sb.AppendLine("        /// <summary>");
         sb.AppendLine("        /// Provides the value for the markup extension, returning a <see cref=\"global::Avalonia.Data.MultiBinding\"/>");
@@ -60,10 +60,7 @@ internal static class TranslateFormatExtensionGenerator
         sb.AppendLine("                mb.Bindings.Add(binding);");
         sb.AppendLine("            }");
         sb.AppendLine();
-        sb.AppendLine("            mb.Bindings.Add(new global::Avalonia.Data.Binding(\"Text\")");
-        sb.AppendLine("            {");
-        sb.AppendLine("                Source = Template,");
-        sb.AppendLine("            });");
+        sb.AppendLine("            mb.Bindings.Add(new global::Avalonia.Data.ReflectionBinding(\"Text\"));");
         sb.AppendLine("            mb.Converter = new TranslationTemplateConverter(Template);");
         sb.AppendLine("            return mb;");
         sb.AppendLine("        }");

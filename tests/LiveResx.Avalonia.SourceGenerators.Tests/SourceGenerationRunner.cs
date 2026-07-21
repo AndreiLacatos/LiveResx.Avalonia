@@ -46,7 +46,7 @@ internal static class SourceGenerationRunner
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
 
-        var references = Basic.Reference.Assemblies.Net90.References.All
+        var references = Basic.Reference.Assemblies.Net100.References.All
             .Append(MetadataReference.CreateFromFile(
                 typeof(DynamicTranslation).Assembly.Location))
             .Append(MetadataReference.CreateFromFile(

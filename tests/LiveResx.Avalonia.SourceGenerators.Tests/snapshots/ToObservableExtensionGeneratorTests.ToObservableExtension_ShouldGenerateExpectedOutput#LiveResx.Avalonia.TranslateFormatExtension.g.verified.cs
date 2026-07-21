@@ -35,8 +35,8 @@ namespace LiveResx.Avalonia
         /// Gets the collection of bindings that supply the format arguments.
         /// </summary>
         [global::Avalonia.Metadata.Content]
-        public global::System.Collections.Generic.IList<global::Avalonia.Data.IBinding> Bindings { get; } =
-            new global::System.Collections.Generic.List<global::Avalonia.Data.IBinding>();
+        public global::System.Collections.Generic.IList<global::Avalonia.Data.BindingBase> Bindings { get; } =
+            new global::System.Collections.Generic.List<global::Avalonia.Data.BindingBase>();
 
         /// <summary>
         /// Provides the value for the markup extension, returning a <see cref="global::Avalonia.Data.MultiBinding"/>
@@ -54,10 +54,7 @@ namespace LiveResx.Avalonia
                 mb.Bindings.Add(binding);
             }
 
-            mb.Bindings.Add(new global::Avalonia.Data.Binding("Text")
-            {
-                Source = Template,
-            });
+            mb.Bindings.Add(new global::Avalonia.Data.ReflectionBinding("Text"));
             mb.Converter = new TranslationTemplateConverter(Template);
             return mb;
         }

@@ -26,7 +26,8 @@ internal static class ReactiveAssemblyDetector
         {
             if (assembly.Name is "System.Reactive"
                                or "ReactiveUI"
-                               or "ReactiveUI.Avalonia")
+                               or "ReactiveUI.Avalonia"
+                               or "Avalonia.ReactiveUI")
             {
                 return true;
             }
