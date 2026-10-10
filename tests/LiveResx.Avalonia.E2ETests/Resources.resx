@@ -3,4 +3,7 @@
   <data name="HelloWorld" xml:space="preserve">
     <value>Hello</value>
   </data>
+  <data name="Greeting" xml:space="preserve">
+    <value>Hello {0}!</value>
+  </data>
 </root>
