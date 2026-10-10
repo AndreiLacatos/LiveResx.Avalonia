@@ -67,15 +67,13 @@ printf "${COLOR_RESET}"
 if [ -d "${TIMING_OUTPUT_FOLDER}" ]; then
     rm -rf "${TIMING_OUTPUT_FOLDER}"
 fi
-if [ -d "${LOCAL_PACKAGE_CACHE_FOLDER}" ]; then
-    rm -rf "${LOCAL_PACKAGE_CACHE_FOLDER}"
-fi
+
+cleanup() {
+    rm -rf "${TIMING_OUTPUT_FOLDER}" "${LOCAL_PACKAGE_CACHE_FOLDER}"
+}
+trap cleanup EXIT
 
 dotnet test LiveResx.Avalonia.E2ETests.csproj -c "${CONFIGURATION}" --no-restore
-
-if [ -d "${TIMING_OUTPUT_FOLDER}" ]; then
-    rm -rf "${TIMING_OUTPUT_FOLDER}"
-fi
 echo
 
 printf "${COLOR_GREEN}"

@@ -28,4 +28,7 @@ internal class Resources
 
     internal static string HelloWorld =>
         ResourceManager.GetString("HelloWorld", resourceCulture) ?? string.Empty;
+
+    internal static string Greeting =>
+        ResourceManager.GetString("Greeting", resourceCulture) ?? string.Empty;
 }

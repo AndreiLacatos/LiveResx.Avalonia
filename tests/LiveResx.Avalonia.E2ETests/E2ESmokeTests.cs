@@ -5,6 +5,7 @@ using Xunit;
 
 namespace LiveResx.Avalonia.E2ETests;
 
+[Collection(DynamicLocalizationCollection.Name)]
 public class E2ESmokeTests
 {
     [Fact]
