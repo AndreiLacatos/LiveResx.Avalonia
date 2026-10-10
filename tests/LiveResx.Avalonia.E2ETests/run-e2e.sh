@@ -19,6 +19,10 @@ NUGET_CONFIG_FILE="nuget.e2e.config"
 LOCAL_PACKAGE_CACHE_FOLDER="packages"
 TIMING_OUTPUT_FOLDER="timings"
 
+# Avalonia's build telemetry runs a collector process from the package folder,
+# which keeps its files locked after the build and breaks the cleanup.
+export AVALONIA_TELEMETRY_OPTOUT=1
+
 # Detect if running from project root; if so, cd to tests/LiveResx.Avalonia.E2ETests
 if [ ! -f "LiveResx.Avalonia.E2ETests.csproj" ]; then
   if [ -f "tests/LiveResx.Avalonia.E2ETests/LiveResx.Avalonia.E2ETests.csproj" ]; then
@@ -69,7 +73,7 @@ if [ -d "${TIMING_OUTPUT_FOLDER}" ]; then
 fi
 
 cleanup() {
-    rm -rf "${TIMING_OUTPUT_FOLDER}" "${LOCAL_PACKAGE_CACHE_FOLDER}"
+    rm -rf "${TIMING_OUTPUT_FOLDER}" "${LOCAL_PACKAGE_CACHE_FOLDER}" || echo "WARNING: could not fully remove ${LOCAL_PACKAGE_CACHE_FOLDER}"
 }
 trap cleanup EXIT
 

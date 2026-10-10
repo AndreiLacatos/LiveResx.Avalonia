@@ -34,6 +34,11 @@ function Remove-Folder([string]$Path) {
     if (Test-Path $Path) { Remove-Item -Recurse -Force $Path }
 }
 
+# Avalonia's build telemetry runs a collector process from the package folder,
+# which keeps its files locked after the build and breaks the cleanup.
+$PreviousTelemetryOptOut = $env:AVALONIA_TELEMETRY_OPTOUT
+$env:AVALONIA_TELEMETRY_OPTOUT = '1'
+
 Push-Location $PSScriptRoot
 try {
     Write-Banner 'Restoring dependencies'
@@ -55,7 +60,9 @@ try {
 
     Write-Banner 'E2E tests run successfully.' -Color Green
 } finally {
-    Remove-Folder $TimingOutputFolder
-    Remove-Folder $LocalPackageCacheFolder
+    foreach ($folder in $TimingOutputFolder, $LocalPackageCacheFolder) {
+        try { Remove-Folder $folder } catch { Write-Warning "Could not fully remove '$folder': $($_.Exception.Message)" }
+    }
+    $env:AVALONIA_TELEMETRY_OPTOUT = $PreviousTelemetryOptOut
     Pop-Location
 }
