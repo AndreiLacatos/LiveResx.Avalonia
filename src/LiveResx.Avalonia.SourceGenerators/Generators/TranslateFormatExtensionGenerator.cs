@@ -60,7 +60,10 @@ internal static class TranslateFormatExtensionGenerator
         sb.AppendLine("                mb.Bindings.Add(binding);");
         sb.AppendLine("            }");
         sb.AppendLine();
-        sb.AppendLine("            mb.Bindings.Add(new global::Avalonia.Data.ReflectionBinding(\"Text\"));");
+        sb.AppendLine("            mb.Bindings.Add(new global::Avalonia.Data.ReflectionBinding(\"Text\")");
+        sb.AppendLine("            {");
+        sb.AppendLine("                Source = Template,");
+        sb.AppendLine("            });");
         sb.AppendLine("            mb.Converter = new TranslationTemplateConverter(Template);");
         sb.AppendLine("            return mb;");
         sb.AppendLine("        }");

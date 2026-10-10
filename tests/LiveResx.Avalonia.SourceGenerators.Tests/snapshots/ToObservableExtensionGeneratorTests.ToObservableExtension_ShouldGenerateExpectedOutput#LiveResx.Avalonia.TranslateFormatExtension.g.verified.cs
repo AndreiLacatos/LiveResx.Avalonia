@@ -54,7 +54,10 @@ namespace LiveResx.Avalonia
                 mb.Bindings.Add(binding);
             }
 
-            mb.Bindings.Add(new global::Avalonia.Data.ReflectionBinding("Text"));
+            mb.Bindings.Add(new global::Avalonia.Data.ReflectionBinding("Text")
+            {
+                Source = Template,
+            });
             mb.Converter = new TranslationTemplateConverter(Template);
             return mb;
         }
